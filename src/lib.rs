@@ -109,6 +109,11 @@ pub mod ibc {
                 #[cfg(feature = "serde")]
                 include_proto!("ibc.core.channel.v1.serde.rs");
             }
+            pub mod v2 {
+                include_proto!("ibc.core.channel.v2.rs");
+                #[cfg(feature = "serde")]
+                include_proto!("ibc.core.channel.v2.serde.rs");
+            }
         }
         pub mod client {
             pub mod v1 {
@@ -122,6 +127,11 @@ pub mod ibc {
                 include_proto!("ibc.core.commitment.v1.rs");
                 #[cfg(feature = "serde")]
                 include_proto!("ibc.core.commitment.v1.serde.rs");
+            }
+            pub mod v2 {
+                include_proto!("ibc.core.commitment.v2.rs");
+                #[cfg(feature = "serde")]
+                include_proto!("ibc.core.commitment.v2.serde.rs");
             }
         }
         pub mod connection {
@@ -140,18 +150,6 @@ pub mod ibc {
         }
     }
     pub mod lightclients {
-        pub mod localhost {
-            pub mod v1 {
-                include_proto!("ibc.lightclients.localhost.v1.rs");
-                #[cfg(feature = "serde")]
-                include_proto!("ibc.lightclients.localhost.v1.serde.rs");
-            }
-            pub mod v2 {
-                include_proto!("ibc.lightclients.localhost.v2.rs");
-                #[cfg(feature = "serde")]
-                include_proto!("ibc.lightclients.localhost.v2.serde.rs");
-            }
-        }
         pub mod solomachine {
             pub mod v3 {
                 include_proto!("ibc.lightclients.solomachine.v3.rs");
