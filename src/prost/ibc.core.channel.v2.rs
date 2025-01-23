@@ -7,12 +7,12 @@ pub struct Packet {
     /// with a later sequence number.
     #[prost(uint64, tag = "1")]
     pub sequence: u64,
-    /// identifies the sending chain.
+    /// identifies the sending client on the sending chain.
     #[prost(string, tag = "2")]
-    pub source_channel: ::prost::alloc::string::String,
-    /// identifies the receiving chain.
+    pub source_client: ::prost::alloc::string::String,
+    /// identifies the receiving client on the receiving chain.
     #[prost(string, tag = "3")]
-    pub destination_channel: ::prost::alloc::string::String,
+    pub destination_client: ::prost::alloc::string::String,
     /// timeout timestamp in seconds after which the packet times out.
     #[prost(uint64, tag = "4")]
     pub timeout_timestamp: u64,
@@ -132,90 +132,11 @@ impl PacketStatus {
         }
     }
 }
-/// MsgCreateChannel defines the message used to create a v2 Channel.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MsgCreateChannel {
-    /// the client identifier of the light client representing the counterparty chain
-    #[prost(string, tag = "1")]
-    pub client_id: ::prost::alloc::string::String,
-    /// the key path used to store packet flow messages that the counterparty
-    /// will use to send to us.
-    #[prost(message, optional, tag = "2")]
-    pub merkle_path_prefix: ::core::option::Option<
-        super::super::commitment::v2::MerklePath,
-    >,
-    /// signer address
-    #[prost(string, tag = "3")]
-    pub signer: ::prost::alloc::string::String,
-}
-impl ::prost::Name for MsgCreateChannel {
-    const NAME: &'static str = "MsgCreateChannel";
-    const PACKAGE: &'static str = "ibc.core.channel.v2";
-    fn full_name() -> ::prost::alloc::string::String {
-        "ibc.core.channel.v2.MsgCreateChannel".into()
-    }
-    fn type_url() -> ::prost::alloc::string::String {
-        "/ibc.core.channel.v2.MsgCreateChannel".into()
-    }
-}
-/// MsgCreateChannelResponse defines the Msg/CreateChannel response type.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MsgCreateChannelResponse {
-    #[prost(string, tag = "1")]
-    pub channel_id: ::prost::alloc::string::String,
-}
-impl ::prost::Name for MsgCreateChannelResponse {
-    const NAME: &'static str = "MsgCreateChannelResponse";
-    const PACKAGE: &'static str = "ibc.core.channel.v2";
-    fn full_name() -> ::prost::alloc::string::String {
-        "ibc.core.channel.v2.MsgCreateChannelResponse".into()
-    }
-    fn type_url() -> ::prost::alloc::string::String {
-        "/ibc.core.channel.v2.MsgCreateChannelResponse".into()
-    }
-}
-/// MsgRegisterCounterparty defines the message used to provide the counterparty channel
-/// identifier.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MsgRegisterCounterparty {
-    /// unique identifier we will use to write all packet messages sent to counterparty
-    #[prost(string, tag = "1")]
-    pub channel_id: ::prost::alloc::string::String,
-    /// counterparty channel identifier
-    #[prost(string, tag = "2")]
-    pub counterparty_channel_id: ::prost::alloc::string::String,
-    /// signer address
-    #[prost(string, tag = "3")]
-    pub signer: ::prost::alloc::string::String,
-}
-impl ::prost::Name for MsgRegisterCounterparty {
-    const NAME: &'static str = "MsgRegisterCounterparty";
-    const PACKAGE: &'static str = "ibc.core.channel.v2";
-    fn full_name() -> ::prost::alloc::string::String {
-        "ibc.core.channel.v2.MsgRegisterCounterparty".into()
-    }
-    fn type_url() -> ::prost::alloc::string::String {
-        "/ibc.core.channel.v2.MsgRegisterCounterparty".into()
-    }
-}
-/// MsgRegisterCounterpartyResponse defines the Msg/RegisterCounterparty response type.
-#[derive(Clone, Copy, PartialEq, ::prost::Message)]
-pub struct MsgRegisterCounterpartyResponse {}
-impl ::prost::Name for MsgRegisterCounterpartyResponse {
-    const NAME: &'static str = "MsgRegisterCounterpartyResponse";
-    const PACKAGE: &'static str = "ibc.core.channel.v2";
-    fn full_name() -> ::prost::alloc::string::String {
-        "ibc.core.channel.v2.MsgRegisterCounterpartyResponse".into()
-    }
-    fn type_url() -> ::prost::alloc::string::String {
-        "/ibc.core.channel.v2.MsgRegisterCounterpartyResponse".into()
-    }
-}
 /// MsgSendPacket sends an outgoing IBC packet.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MsgSendPacket {
     #[prost(string, tag = "1")]
-    pub source_channel: ::prost::alloc::string::String,
+    pub source_client: ::prost::alloc::string::String,
     #[prost(uint64, tag = "2")]
     pub timeout_timestamp: u64,
     #[prost(message, repeated, tag = "3")]
@@ -496,58 +417,6 @@ pub mod msg_client {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
         }
-        /// CreateChannel defines a rpc handler method for MsgCreateChannel
-        pub async fn create_channel(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MsgCreateChannel>,
-        ) -> std::result::Result<
-            tonic::Response<super::MsgCreateChannelResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/ibc.core.channel.v2.Msg/CreateChannel",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("ibc.core.channel.v2.Msg", "CreateChannel"));
-            self.inner.unary(req, path, codec).await
-        }
-        /// RegisterCounterparty defines a rpc handler method for MsgRegisterCounterparty.
-        pub async fn register_counterparty(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MsgRegisterCounterparty>,
-        ) -> std::result::Result<
-            tonic::Response<super::MsgRegisterCounterpartyResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/ibc.core.channel.v2.Msg/RegisterCounterparty",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new("ibc.core.channel.v2.Msg", "RegisterCounterparty"),
-                );
-            self.inner.unary(req, path, codec).await
-        }
         /// SendPacket defines a rpc handler method for MsgSendPacket.
         pub async fn send_packet(
             &mut self,
@@ -664,22 +533,6 @@ pub mod msg_server {
     /// Generated trait containing gRPC methods that should be implemented for use with MsgServer.
     #[async_trait]
     pub trait Msg: std::marker::Send + std::marker::Sync + 'static {
-        /// CreateChannel defines a rpc handler method for MsgCreateChannel
-        async fn create_channel(
-            &self,
-            request: tonic::Request<super::MsgCreateChannel>,
-        ) -> std::result::Result<
-            tonic::Response<super::MsgCreateChannelResponse>,
-            tonic::Status,
-        >;
-        /// RegisterCounterparty defines a rpc handler method for MsgRegisterCounterparty.
-        async fn register_counterparty(
-            &self,
-            request: tonic::Request<super::MsgRegisterCounterparty>,
-        ) -> std::result::Result<
-            tonic::Response<super::MsgRegisterCounterpartyResponse>,
-            tonic::Status,
-        >;
         /// SendPacket defines a rpc handler method for MsgSendPacket.
         async fn send_packet(
             &self,
@@ -790,94 +643,6 @@ pub mod msg_server {
         }
         fn call(&mut self, req: http::Request<B>) -> Self::Future {
             match req.uri().path() {
-                "/ibc.core.channel.v2.Msg/CreateChannel" => {
-                    #[allow(non_camel_case_types)]
-                    struct CreateChannelSvc<T: Msg>(pub Arc<T>);
-                    impl<T: Msg> tonic::server::UnaryService<super::MsgCreateChannel>
-                    for CreateChannelSvc<T> {
-                        type Response = super::MsgCreateChannelResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
-                        fn call(
-                            &mut self,
-                            request: tonic::Request<super::MsgCreateChannel>,
-                        ) -> Self::Future {
-                            let inner = Arc::clone(&self.0);
-                            let fut = async move {
-                                <T as Msg>::create_channel(&inner, request).await
-                            };
-                            Box::pin(fut)
-                        }
-                    }
-                    let accept_compression_encodings = self.accept_compression_encodings;
-                    let send_compression_encodings = self.send_compression_encodings;
-                    let max_decoding_message_size = self.max_decoding_message_size;
-                    let max_encoding_message_size = self.max_encoding_message_size;
-                    let inner = self.inner.clone();
-                    let fut = async move {
-                        let method = CreateChannelSvc(inner);
-                        let codec = tonic::codec::ProstCodec::default();
-                        let mut grpc = tonic::server::Grpc::new(codec)
-                            .apply_compression_config(
-                                accept_compression_encodings,
-                                send_compression_encodings,
-                            )
-                            .apply_max_message_size_config(
-                                max_decoding_message_size,
-                                max_encoding_message_size,
-                            );
-                        let res = grpc.unary(method, req).await;
-                        Ok(res)
-                    };
-                    Box::pin(fut)
-                }
-                "/ibc.core.channel.v2.Msg/RegisterCounterparty" => {
-                    #[allow(non_camel_case_types)]
-                    struct RegisterCounterpartySvc<T: Msg>(pub Arc<T>);
-                    impl<
-                        T: Msg,
-                    > tonic::server::UnaryService<super::MsgRegisterCounterparty>
-                    for RegisterCounterpartySvc<T> {
-                        type Response = super::MsgRegisterCounterpartyResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
-                        fn call(
-                            &mut self,
-                            request: tonic::Request<super::MsgRegisterCounterparty>,
-                        ) -> Self::Future {
-                            let inner = Arc::clone(&self.0);
-                            let fut = async move {
-                                <T as Msg>::register_counterparty(&inner, request).await
-                            };
-                            Box::pin(fut)
-                        }
-                    }
-                    let accept_compression_encodings = self.accept_compression_encodings;
-                    let send_compression_encodings = self.send_compression_encodings;
-                    let max_decoding_message_size = self.max_decoding_message_size;
-                    let max_encoding_message_size = self.max_encoding_message_size;
-                    let inner = self.inner.clone();
-                    let fut = async move {
-                        let method = RegisterCounterpartySvc(inner);
-                        let codec = tonic::codec::ProstCodec::default();
-                        let mut grpc = tonic::server::Grpc::new(codec)
-                            .apply_compression_config(
-                                accept_compression_encodings,
-                                send_compression_encodings,
-                            )
-                            .apply_max_message_size_config(
-                                max_decoding_message_size,
-                                max_encoding_message_size,
-                            );
-                        let res = grpc.unary(method, req).await;
-                        Ok(res)
-                    };
-                    Box::pin(fut)
-                }
                 "/ibc.core.channel.v2.Msg/SendPacket" => {
                     #[allow(non_camel_case_types)]
                     struct SendPacketSvc<T: Msg>(pub Arc<T>);
@@ -1088,65 +853,9 @@ pub mod msg_server {
         const NAME: &'static str = SERVICE_NAME;
     }
 }
-/// Channel defines the channel end on a chain that is implementing the version 2 IBC protocol
-/// Each side will maintain its own Channel to create an IBC channel
-/// The channel will be referenced by a channelID which will be used to send packets
-/// to the counterparty
-/// The channel will contain the client identifier that will provide proof verification for the channel
-/// and the counterparty channel identifier that the other channel end will be using
-/// to send packets to our channel end.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Channel {
-    /// the client identifier of the light client representing the counterparty chain
-    #[prost(string, tag = "1")]
-    pub client_id: ::prost::alloc::string::String,
-    /// the counterparty identifier that must be used by packets sent by counterparty
-    /// to our channel end.
-    #[prost(string, tag = "2")]
-    pub counterparty_channel_id: ::prost::alloc::string::String,
-    /// the key path used to store packet flow messages that the counterparty
-    /// will use to send to us. In backwards compatible cases, we will append the channelID and sequence in order to create
-    /// the final path.
-    #[prost(message, optional, tag = "3")]
-    pub merkle_path_prefix: ::core::option::Option<
-        super::super::commitment::v2::MerklePath,
-    >,
-}
-impl ::prost::Name for Channel {
-    const NAME: &'static str = "Channel";
-    const PACKAGE: &'static str = "ibc.core.channel.v2";
-    fn full_name() -> ::prost::alloc::string::String {
-        "ibc.core.channel.v2.Channel".into()
-    }
-    fn type_url() -> ::prost::alloc::string::String {
-        "/ibc.core.channel.v2.Channel".into()
-    }
-}
-/// IdentifiedChannel defines a channel with an additional channel identifier field.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct IdentifiedChannel {
-    /// channel identified.
-    #[prost(message, optional, tag = "1")]
-    pub channel: ::core::option::Option<Channel>,
-    /// channel identifier
-    #[prost(string, tag = "2")]
-    pub channel_id: ::prost::alloc::string::String,
-}
-impl ::prost::Name for IdentifiedChannel {
-    const NAME: &'static str = "IdentifiedChannel";
-    const PACKAGE: &'static str = "ibc.core.channel.v2";
-    fn full_name() -> ::prost::alloc::string::String {
-        "ibc.core.channel.v2.IdentifiedChannel".into()
-    }
-    fn type_url() -> ::prost::alloc::string::String {
-        "/ibc.core.channel.v2.IdentifiedChannel".into()
-    }
-}
 /// GenesisState defines the ibc channel/v2 submodule's genesis state.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenesisState {
-    #[prost(message, repeated, tag = "1")]
-    pub channels: ::prost::alloc::vec::Vec<IdentifiedChannel>,
     #[prost(message, repeated, tag = "2")]
     pub acknowledgements: ::prost::alloc::vec::Vec<PacketState>,
     #[prost(message, repeated, tag = "3")]
@@ -1155,9 +864,6 @@ pub struct GenesisState {
     pub receipts: ::prost::alloc::vec::Vec<PacketState>,
     #[prost(message, repeated, tag = "5")]
     pub send_sequences: ::prost::alloc::vec::Vec<PacketSequence>,
-    /// the sequence for the next generated channel identifier
-    #[prost(uint64, tag = "6")]
-    pub next_channel_sequence: u64,
 }
 impl ::prost::Name for GenesisState {
     const NAME: &'static str = "GenesisState";
@@ -1175,9 +881,9 @@ impl ::prost::Name for GenesisState {
 /// state as a commitment, acknowledgement, or a receipt.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PacketState {
-    /// channel unique identifier.
+    /// client unique identifier.
     #[prost(string, tag = "1")]
-    pub channel_id: ::prost::alloc::string::String,
+    pub client_id: ::prost::alloc::string::String,
     /// packet sequence.
     #[prost(uint64, tag = "2")]
     pub sequence: u64,
@@ -1198,9 +904,9 @@ impl ::prost::Name for PacketState {
 /// PacketSequence defines the genesis type necessary to retrieve and store next send sequences.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PacketSequence {
-    /// channel unique identifier.
+    /// client unique identifier.
     #[prost(string, tag = "1")]
-    pub channel_id: ::prost::alloc::string::String,
+    pub client_id: ::prost::alloc::string::String,
     /// packet sequence
     #[prost(uint64, tag = "2")]
     pub sequence: u64,
@@ -1215,45 +921,12 @@ impl ::prost::Name for PacketSequence {
         "/ibc.core.channel.v2.PacketSequence".into()
     }
 }
-/// QueryChannelRequest is the request type for the Query/Channel RPC method
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct QueryChannelRequest {
-    #[prost(string, tag = "1")]
-    pub channel_id: ::prost::alloc::string::String,
-}
-impl ::prost::Name for QueryChannelRequest {
-    const NAME: &'static str = "QueryChannelRequest";
-    const PACKAGE: &'static str = "ibc.core.channel.v2";
-    fn full_name() -> ::prost::alloc::string::String {
-        "ibc.core.channel.v2.QueryChannelRequest".into()
-    }
-    fn type_url() -> ::prost::alloc::string::String {
-        "/ibc.core.channel.v2.QueryChannelRequest".into()
-    }
-}
-/// QueryChannelRequest is the response type for the Query/Channel RPC method
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct QueryChannelResponse {
-    /// the channel associated with the provided channel id
-    #[prost(message, optional, tag = "1")]
-    pub channel: ::core::option::Option<Channel>,
-}
-impl ::prost::Name for QueryChannelResponse {
-    const NAME: &'static str = "QueryChannelResponse";
-    const PACKAGE: &'static str = "ibc.core.channel.v2";
-    fn full_name() -> ::prost::alloc::string::String {
-        "ibc.core.channel.v2.QueryChannelResponse".into()
-    }
-    fn type_url() -> ::prost::alloc::string::String {
-        "/ibc.core.channel.v2.QueryChannelResponse".into()
-    }
-}
 /// QueryNextSequenceSendRequest is the request type for the Query/QueryNextSequenceSend RPC method
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryNextSequenceSendRequest {
-    /// channel unique identifier
+    /// client unique identifier
     #[prost(string, tag = "1")]
-    pub channel_id: ::prost::alloc::string::String,
+    pub client_id: ::prost::alloc::string::String,
 }
 impl ::prost::Name for QueryNextSequenceSendRequest {
     const NAME: &'static str = "QueryNextSequenceSendRequest";
@@ -1291,9 +964,9 @@ impl ::prost::Name for QueryNextSequenceSendResponse {
 /// QueryPacketCommitmentRequest is the request type for the Query/PacketCommitment RPC method.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryPacketCommitmentRequest {
-    /// channel unique identifier
+    /// client unique identifier
     #[prost(string, tag = "1")]
-    pub channel_id: ::prost::alloc::string::String,
+    pub client_id: ::prost::alloc::string::String,
     /// packet sequence
     #[prost(uint64, tag = "2")]
     pub sequence: u64,
@@ -1334,9 +1007,9 @@ impl ::prost::Name for QueryPacketCommitmentResponse {
 /// QueryPacketCommitmentsRequest is the request type for the Query/PacketCommitments RPC method.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryPacketCommitmentsRequest {
-    /// channel unique identifier
+    /// client unique identifier
     #[prost(string, tag = "1")]
-    pub channel_id: ::prost::alloc::string::String,
+    pub client_id: ::prost::alloc::string::String,
     /// pagination request
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<
@@ -1381,9 +1054,9 @@ impl ::prost::Name for QueryPacketCommitmentsResponse {
 /// QueryPacketAcknowledgementRequest is the request type for the Query/PacketAcknowledgement RPC method.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryPacketAcknowledgementRequest {
-    /// channel unique identifier
+    /// client unique identifier
     #[prost(string, tag = "1")]
-    pub channel_id: ::prost::alloc::string::String,
+    pub client_id: ::prost::alloc::string::String,
     /// packet sequence
     #[prost(uint64, tag = "2")]
     pub sequence: u64,
@@ -1425,9 +1098,9 @@ impl ::prost::Name for QueryPacketAcknowledgementResponse {
 /// Query/QueryPacketCommitments RPC method
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryPacketAcknowledgementsRequest {
-    /// channel unique identifier
+    /// client unique identifier
     #[prost(string, tag = "1")]
-    pub channel_id: ::prost::alloc::string::String,
+    pub client_id: ::prost::alloc::string::String,
     /// pagination request
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<
@@ -1475,14 +1148,11 @@ impl ::prost::Name for QueryPacketAcknowledgementsResponse {
 /// QueryPacketReceiptRequest is the request type for the Query/PacketReceipt RPC method.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryPacketReceiptRequest {
-    /// port unique identifier
+    /// client unique identifier
     #[prost(string, tag = "1")]
-    pub port_id: ::prost::alloc::string::String,
-    /// channel unique identifier
-    #[prost(string, tag = "2")]
-    pub channel_id: ::prost::alloc::string::String,
+    pub client_id: ::prost::alloc::string::String,
     /// packet sequence
-    #[prost(uint64, tag = "3")]
+    #[prost(uint64, tag = "2")]
     pub sequence: u64,
 }
 impl ::prost::Name for QueryPacketReceiptRequest {
@@ -1521,9 +1191,9 @@ impl ::prost::Name for QueryPacketReceiptResponse {
 /// QueryUnreceivedPacketsRequest is the request type for the Query/UnreceivedPackets RPC method
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryUnreceivedPacketsRequest {
-    /// channel unique identifier
+    /// client unique identifier
     #[prost(string, tag = "1")]
-    pub channel_id: ::prost::alloc::string::String,
+    pub client_id: ::prost::alloc::string::String,
     /// list of packet sequences
     #[prost(uint64, repeated, tag = "2")]
     pub sequences: ::prost::alloc::vec::Vec<u64>,
@@ -1562,9 +1232,9 @@ impl ::prost::Name for QueryUnreceivedPacketsResponse {
 /// Query/UnreceivedAcks RPC method
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryUnreceivedAcksRequest {
-    /// channel unique identifier
+    /// client unique identifier
     #[prost(string, tag = "1")]
-    pub channel_id: ::prost::alloc::string::String,
+    pub client_id: ::prost::alloc::string::String,
     /// list of acknowledgement sequences
     #[prost(uint64, repeated, tag = "2")]
     pub packet_ack_sequences: ::prost::alloc::vec::Vec<u64>,
@@ -1693,31 +1363,6 @@ pub mod query_client {
         pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
-        }
-        /// Channel queries the counterparty of an IBC client.
-        pub async fn channel(
-            &mut self,
-            request: impl tonic::IntoRequest<super::QueryChannelRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::QueryChannelResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::unknown(
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/ibc.core.channel.v2.Query/Channel",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("ibc.core.channel.v2.Query", "Channel"));
-            self.inner.unary(req, path, codec).await
         }
         /// NextSequenceSend returns the next send sequence for a given channel.
         pub async fn next_sequence_send(
@@ -1950,14 +1595,6 @@ pub mod query_server {
     /// Generated trait containing gRPC methods that should be implemented for use with QueryServer.
     #[async_trait]
     pub trait Query: std::marker::Send + std::marker::Sync + 'static {
-        /// Channel queries the counterparty of an IBC client.
-        async fn channel(
-            &self,
-            request: tonic::Request<super::QueryChannelRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::QueryChannelResponse>,
-            tonic::Status,
-        >;
         /// NextSequenceSend returns the next send sequence for a given channel.
         async fn next_sequence_send(
             &self,
@@ -2100,51 +1737,6 @@ pub mod query_server {
         }
         fn call(&mut self, req: http::Request<B>) -> Self::Future {
             match req.uri().path() {
-                "/ibc.core.channel.v2.Query/Channel" => {
-                    #[allow(non_camel_case_types)]
-                    struct ChannelSvc<T: Query>(pub Arc<T>);
-                    impl<
-                        T: Query,
-                    > tonic::server::UnaryService<super::QueryChannelRequest>
-                    for ChannelSvc<T> {
-                        type Response = super::QueryChannelResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
-                        fn call(
-                            &mut self,
-                            request: tonic::Request<super::QueryChannelRequest>,
-                        ) -> Self::Future {
-                            let inner = Arc::clone(&self.0);
-                            let fut = async move {
-                                <T as Query>::channel(&inner, request).await
-                            };
-                            Box::pin(fut)
-                        }
-                    }
-                    let accept_compression_encodings = self.accept_compression_encodings;
-                    let send_compression_encodings = self.send_compression_encodings;
-                    let max_decoding_message_size = self.max_decoding_message_size;
-                    let max_encoding_message_size = self.max_encoding_message_size;
-                    let inner = self.inner.clone();
-                    let fut = async move {
-                        let method = ChannelSvc(inner);
-                        let codec = tonic::codec::ProstCodec::default();
-                        let mut grpc = tonic::server::Grpc::new(codec)
-                            .apply_compression_config(
-                                accept_compression_encodings,
-                                send_compression_encodings,
-                            )
-                            .apply_max_message_size_config(
-                                max_decoding_message_size,
-                                max_encoding_message_size,
-                            );
-                        let res = grpc.unary(method, req).await;
-                        Ok(res)
-                    };
-                    Box::pin(fut)
-                }
                 "/ibc.core.channel.v2.Query/NextSequenceSend" => {
                     #[allow(non_camel_case_types)]
                     struct NextSequenceSendSvc<T: Query>(pub Arc<T>);

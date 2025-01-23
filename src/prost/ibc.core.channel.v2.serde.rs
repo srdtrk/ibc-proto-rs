@@ -93,134 +93,6 @@ impl<'de> serde::Deserialize<'de> for Acknowledgement {
         deserializer.deserialize_struct("ibc.core.channel.v2.Acknowledgement", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for Channel {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> core::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if true {
-            len += 1;
-        }
-        if true {
-            len += 1;
-        }
-        if true {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("ibc.core.channel.v2.Channel", len)?;
-        if true {
-            struct_ser.serialize_field("clientId", &self.client_id)?;
-        }
-        if true {
-            struct_ser.serialize_field("counterpartyChannelId", &self.counterparty_channel_id)?;
-        }
-        if let Some(v) = self.merkle_path_prefix.as_ref() {
-            struct_ser.serialize_field("merklePathPrefix", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for Channel {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "client_id",
-            "clientId",
-            "counterparty_channel_id",
-            "counterpartyChannelId",
-            "merkle_path_prefix",
-            "merklePathPrefix",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            ClientId,
-            CounterpartyChannelId,
-            MerklePathPrefix,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> core::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> core::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "clientId" | "client_id" => Ok(GeneratedField::ClientId),
-                            "counterpartyChannelId" | "counterparty_channel_id" => Ok(GeneratedField::CounterpartyChannelId),
-                            "merklePathPrefix" | "merkle_path_prefix" => Ok(GeneratedField::MerklePathPrefix),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = Channel;
-
-            fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                formatter.write_str("struct ibc.core.channel.v2.Channel")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> core::result::Result<Channel, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut client_id__ = None;
-                let mut counterparty_channel_id__ = None;
-                let mut merkle_path_prefix__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::ClientId => {
-                            if client_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("clientId"));
-                            }
-                            client_id__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::CounterpartyChannelId => {
-                            if counterparty_channel_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("counterpartyChannelId"));
-                            }
-                            counterparty_channel_id__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::MerklePathPrefix => {
-                            if merkle_path_prefix__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("merklePathPrefix"));
-                            }
-                            merkle_path_prefix__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(Channel {
-                    client_id: client_id__.unwrap_or_default(),
-                    counterparty_channel_id: counterparty_channel_id__.unwrap_or_default(),
-                    merkle_path_prefix: merkle_path_prefix__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("ibc.core.channel.v2.Channel", FIELDS, GeneratedVisitor)
-    }
-}
 impl serde::Serialize for GenesisState {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> core::result::Result<S::Ok, S::Error>
@@ -241,16 +113,7 @@ impl serde::Serialize for GenesisState {
         if true {
             len += 1;
         }
-        if true {
-            len += 1;
-        }
-        if true {
-            len += 1;
-        }
         let mut struct_ser = serializer.serialize_struct("ibc.core.channel.v2.GenesisState", len)?;
-        if true {
-            struct_ser.serialize_field("channels", &self.channels)?;
-        }
         if true {
             struct_ser.serialize_field("acknowledgements", &self.acknowledgements)?;
         }
@@ -263,10 +126,6 @@ impl serde::Serialize for GenesisState {
         if true {
             struct_ser.serialize_field("sendSequences", &self.send_sequences)?;
         }
-        if true {
-            #[allow(clippy::needless_borrow)]
-            struct_ser.serialize_field("nextChannelSequence", ::alloc::string::ToString::to_string(&self.next_channel_sequence).as_str())?;
-        }
         struct_ser.end()
     }
 }
@@ -277,24 +136,19 @@ impl<'de> serde::Deserialize<'de> for GenesisState {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "channels",
             "acknowledgements",
             "commitments",
             "receipts",
             "send_sequences",
             "sendSequences",
-            "next_channel_sequence",
-            "nextChannelSequence",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Channels,
             Acknowledgements,
             Commitments,
             Receipts,
             SendSequences,
-            NextChannelSequence,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> core::result::Result<GeneratedField, D::Error>
@@ -316,12 +170,10 @@ impl<'de> serde::Deserialize<'de> for GenesisState {
                         E: serde::de::Error,
                     {
                         match value {
-                            "channels" => Ok(GeneratedField::Channels),
                             "acknowledgements" => Ok(GeneratedField::Acknowledgements),
                             "commitments" => Ok(GeneratedField::Commitments),
                             "receipts" => Ok(GeneratedField::Receipts),
                             "sendSequences" | "send_sequences" => Ok(GeneratedField::SendSequences),
-                            "nextChannelSequence" | "next_channel_sequence" => Ok(GeneratedField::NextChannelSequence),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -341,20 +193,12 @@ impl<'de> serde::Deserialize<'de> for GenesisState {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut channels__ = None;
                 let mut acknowledgements__ = None;
                 let mut commitments__ = None;
                 let mut receipts__ = None;
                 let mut send_sequences__ = None;
-                let mut next_channel_sequence__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Channels => {
-                            if channels__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("channels"));
-                            }
-                            channels__ = Some(map_.next_value()?);
-                        }
                         GeneratedField::Acknowledgements => {
                             if acknowledgements__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("acknowledgements"));
@@ -379,136 +223,17 @@ impl<'de> serde::Deserialize<'de> for GenesisState {
                             }
                             send_sequences__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::NextChannelSequence => {
-                            if next_channel_sequence__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("nextChannelSequence"));
-                            }
-                            next_channel_sequence__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
-                            ;
-                        }
                     }
                 }
                 Ok(GenesisState {
-                    channels: channels__.unwrap_or_default(),
                     acknowledgements: acknowledgements__.unwrap_or_default(),
                     commitments: commitments__.unwrap_or_default(),
                     receipts: receipts__.unwrap_or_default(),
                     send_sequences: send_sequences__.unwrap_or_default(),
-                    next_channel_sequence: next_channel_sequence__.unwrap_or_default(),
                 })
             }
         }
         deserializer.deserialize_struct("ibc.core.channel.v2.GenesisState", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for IdentifiedChannel {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> core::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if true {
-            len += 1;
-        }
-        if true {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("ibc.core.channel.v2.IdentifiedChannel", len)?;
-        if let Some(v) = self.channel.as_ref() {
-            struct_ser.serialize_field("channel", v)?;
-        }
-        if true {
-            struct_ser.serialize_field("channelId", &self.channel_id)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for IdentifiedChannel {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "channel",
-            "channel_id",
-            "channelId",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Channel,
-            ChannelId,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> core::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> core::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "channel" => Ok(GeneratedField::Channel),
-                            "channelId" | "channel_id" => Ok(GeneratedField::ChannelId),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = IdentifiedChannel;
-
-            fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                formatter.write_str("struct ibc.core.channel.v2.IdentifiedChannel")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> core::result::Result<IdentifiedChannel, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut channel__ = None;
-                let mut channel_id__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Channel => {
-                            if channel__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("channel"));
-                            }
-                            channel__ = map_.next_value()?;
-                        }
-                        GeneratedField::ChannelId => {
-                            if channel_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("channelId"));
-                            }
-                            channel_id__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(IdentifiedChannel {
-                    channel: channel__,
-                    channel_id: channel_id__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("ibc.core.channel.v2.IdentifiedChannel", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for MsgAcknowledgement {
@@ -768,225 +493,6 @@ impl<'de> serde::Deserialize<'de> for MsgAcknowledgementResponse {
         deserializer.deserialize_struct("ibc.core.channel.v2.MsgAcknowledgementResponse", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for MsgCreateChannel {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> core::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if true {
-            len += 1;
-        }
-        if true {
-            len += 1;
-        }
-        if true {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("ibc.core.channel.v2.MsgCreateChannel", len)?;
-        if true {
-            struct_ser.serialize_field("clientId", &self.client_id)?;
-        }
-        if let Some(v) = self.merkle_path_prefix.as_ref() {
-            struct_ser.serialize_field("merklePathPrefix", v)?;
-        }
-        if true {
-            struct_ser.serialize_field("signer", &self.signer)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MsgCreateChannel {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "client_id",
-            "clientId",
-            "merkle_path_prefix",
-            "merklePathPrefix",
-            "signer",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            ClientId,
-            MerklePathPrefix,
-            Signer,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> core::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> core::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "clientId" | "client_id" => Ok(GeneratedField::ClientId),
-                            "merklePathPrefix" | "merkle_path_prefix" => Ok(GeneratedField::MerklePathPrefix),
-                            "signer" => Ok(GeneratedField::Signer),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MsgCreateChannel;
-
-            fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                formatter.write_str("struct ibc.core.channel.v2.MsgCreateChannel")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> core::result::Result<MsgCreateChannel, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut client_id__ = None;
-                let mut merkle_path_prefix__ = None;
-                let mut signer__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::ClientId => {
-                            if client_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("clientId"));
-                            }
-                            client_id__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::MerklePathPrefix => {
-                            if merkle_path_prefix__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("merklePathPrefix"));
-                            }
-                            merkle_path_prefix__ = map_.next_value()?;
-                        }
-                        GeneratedField::Signer => {
-                            if signer__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("signer"));
-                            }
-                            signer__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(MsgCreateChannel {
-                    client_id: client_id__.unwrap_or_default(),
-                    merkle_path_prefix: merkle_path_prefix__,
-                    signer: signer__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("ibc.core.channel.v2.MsgCreateChannel", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MsgCreateChannelResponse {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> core::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if true {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("ibc.core.channel.v2.MsgCreateChannelResponse", len)?;
-        if true {
-            struct_ser.serialize_field("channelId", &self.channel_id)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MsgCreateChannelResponse {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "channel_id",
-            "channelId",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            ChannelId,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> core::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> core::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "channelId" | "channel_id" => Ok(GeneratedField::ChannelId),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MsgCreateChannelResponse;
-
-            fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                formatter.write_str("struct ibc.core.channel.v2.MsgCreateChannelResponse")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> core::result::Result<MsgCreateChannelResponse, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut channel_id__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::ChannelId => {
-                            if channel_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("channelId"));
-                            }
-                            channel_id__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(MsgCreateChannelResponse {
-                    channel_id: channel_id__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("ibc.core.channel.v2.MsgCreateChannelResponse", FIELDS, GeneratedVisitor)
-    }
-}
 impl serde::Serialize for MsgRecvPacket {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> core::result::Result<S::Ok, S::Error>
@@ -1227,204 +733,6 @@ impl<'de> serde::Deserialize<'de> for MsgRecvPacketResponse {
         deserializer.deserialize_struct("ibc.core.channel.v2.MsgRecvPacketResponse", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for MsgRegisterCounterparty {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> core::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if true {
-            len += 1;
-        }
-        if true {
-            len += 1;
-        }
-        if true {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("ibc.core.channel.v2.MsgRegisterCounterparty", len)?;
-        if true {
-            struct_ser.serialize_field("channelId", &self.channel_id)?;
-        }
-        if true {
-            struct_ser.serialize_field("counterpartyChannelId", &self.counterparty_channel_id)?;
-        }
-        if true {
-            struct_ser.serialize_field("signer", &self.signer)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MsgRegisterCounterparty {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "channel_id",
-            "channelId",
-            "counterparty_channel_id",
-            "counterpartyChannelId",
-            "signer",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            ChannelId,
-            CounterpartyChannelId,
-            Signer,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> core::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> core::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "channelId" | "channel_id" => Ok(GeneratedField::ChannelId),
-                            "counterpartyChannelId" | "counterparty_channel_id" => Ok(GeneratedField::CounterpartyChannelId),
-                            "signer" => Ok(GeneratedField::Signer),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MsgRegisterCounterparty;
-
-            fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                formatter.write_str("struct ibc.core.channel.v2.MsgRegisterCounterparty")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> core::result::Result<MsgRegisterCounterparty, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut channel_id__ = None;
-                let mut counterparty_channel_id__ = None;
-                let mut signer__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::ChannelId => {
-                            if channel_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("channelId"));
-                            }
-                            channel_id__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::CounterpartyChannelId => {
-                            if counterparty_channel_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("counterpartyChannelId"));
-                            }
-                            counterparty_channel_id__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Signer => {
-                            if signer__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("signer"));
-                            }
-                            signer__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(MsgRegisterCounterparty {
-                    channel_id: channel_id__.unwrap_or_default(),
-                    counterparty_channel_id: counterparty_channel_id__.unwrap_or_default(),
-                    signer: signer__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("ibc.core.channel.v2.MsgRegisterCounterparty", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for MsgRegisterCounterpartyResponse {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> core::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let len = 0;
-        let struct_ser = serializer.serialize_struct("ibc.core.channel.v2.MsgRegisterCounterpartyResponse", len)?;
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for MsgRegisterCounterpartyResponse {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> core::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> core::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                            Err(serde::de::Error::unknown_field(value, FIELDS))
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = MsgRegisterCounterpartyResponse;
-
-            fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                formatter.write_str("struct ibc.core.channel.v2.MsgRegisterCounterpartyResponse")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> core::result::Result<MsgRegisterCounterpartyResponse, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                while map_.next_key::<GeneratedField>()?.is_some() {
-                    let _ = map_.next_value::<serde::de::IgnoredAny>()?;
-                }
-                Ok(MsgRegisterCounterpartyResponse {
-                })
-            }
-        }
-        deserializer.deserialize_struct("ibc.core.channel.v2.MsgRegisterCounterpartyResponse", FIELDS, GeneratedVisitor)
-    }
-}
 impl serde::Serialize for MsgSendPacket {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> core::result::Result<S::Ok, S::Error>
@@ -1447,7 +755,7 @@ impl serde::Serialize for MsgSendPacket {
         }
         let mut struct_ser = serializer.serialize_struct("ibc.core.channel.v2.MsgSendPacket", len)?;
         if true {
-            struct_ser.serialize_field("sourceChannel", &self.source_channel)?;
+            struct_ser.serialize_field("sourceClient", &self.source_client)?;
         }
         if true {
             #[allow(clippy::needless_borrow)]
@@ -1469,8 +777,8 @@ impl<'de> serde::Deserialize<'de> for MsgSendPacket {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "source_channel",
-            "sourceChannel",
+            "source_client",
+            "sourceClient",
             "timeout_timestamp",
             "timeoutTimestamp",
             "payloads",
@@ -1479,7 +787,7 @@ impl<'de> serde::Deserialize<'de> for MsgSendPacket {
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            SourceChannel,
+            SourceClient,
             TimeoutTimestamp,
             Payloads,
             Signer,
@@ -1504,7 +812,7 @@ impl<'de> serde::Deserialize<'de> for MsgSendPacket {
                         E: serde::de::Error,
                     {
                         match value {
-                            "sourceChannel" | "source_channel" => Ok(GeneratedField::SourceChannel),
+                            "sourceClient" | "source_client" => Ok(GeneratedField::SourceClient),
                             "timeoutTimestamp" | "timeout_timestamp" => Ok(GeneratedField::TimeoutTimestamp),
                             "payloads" => Ok(GeneratedField::Payloads),
                             "signer" => Ok(GeneratedField::Signer),
@@ -1527,17 +835,17 @@ impl<'de> serde::Deserialize<'de> for MsgSendPacket {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut source_channel__ = None;
+                let mut source_client__ = None;
                 let mut timeout_timestamp__ = None;
                 let mut payloads__ = None;
                 let mut signer__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::SourceChannel => {
-                            if source_channel__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("sourceChannel"));
+                        GeneratedField::SourceClient => {
+                            if source_client__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sourceClient"));
                             }
-                            source_channel__ = Some(map_.next_value()?);
+                            source_client__ = Some(map_.next_value()?);
                         }
                         GeneratedField::TimeoutTimestamp => {
                             if timeout_timestamp__.is_some() {
@@ -1562,7 +870,7 @@ impl<'de> serde::Deserialize<'de> for MsgSendPacket {
                     }
                 }
                 Ok(MsgSendPacket {
-                    source_channel: source_channel__.unwrap_or_default(),
+                    source_client: source_client__.unwrap_or_default(),
                     timeout_timestamp: timeout_timestamp__.unwrap_or_default(),
                     payloads: payloads__.unwrap_or_default(),
                     signer: signer__.unwrap_or_default(),
@@ -1935,10 +1243,10 @@ impl serde::Serialize for Packet {
             struct_ser.serialize_field("sequence", ::alloc::string::ToString::to_string(&self.sequence).as_str())?;
         }
         if true {
-            struct_ser.serialize_field("sourceChannel", &self.source_channel)?;
+            struct_ser.serialize_field("sourceClient", &self.source_client)?;
         }
         if true {
-            struct_ser.serialize_field("destinationChannel", &self.destination_channel)?;
+            struct_ser.serialize_field("destinationClient", &self.destination_client)?;
         }
         if true {
             #[allow(clippy::needless_borrow)]
@@ -1958,10 +1266,10 @@ impl<'de> serde::Deserialize<'de> for Packet {
     {
         const FIELDS: &[&str] = &[
             "sequence",
-            "source_channel",
-            "sourceChannel",
-            "destination_channel",
-            "destinationChannel",
+            "source_client",
+            "sourceClient",
+            "destination_client",
+            "destinationClient",
             "timeout_timestamp",
             "timeoutTimestamp",
             "payloads",
@@ -1970,8 +1278,8 @@ impl<'de> serde::Deserialize<'de> for Packet {
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Sequence,
-            SourceChannel,
-            DestinationChannel,
+            SourceClient,
+            DestinationClient,
             TimeoutTimestamp,
             Payloads,
         }
@@ -1996,8 +1304,8 @@ impl<'de> serde::Deserialize<'de> for Packet {
                     {
                         match value {
                             "sequence" => Ok(GeneratedField::Sequence),
-                            "sourceChannel" | "source_channel" => Ok(GeneratedField::SourceChannel),
-                            "destinationChannel" | "destination_channel" => Ok(GeneratedField::DestinationChannel),
+                            "sourceClient" | "source_client" => Ok(GeneratedField::SourceClient),
+                            "destinationClient" | "destination_client" => Ok(GeneratedField::DestinationClient),
                             "timeoutTimestamp" | "timeout_timestamp" => Ok(GeneratedField::TimeoutTimestamp),
                             "payloads" => Ok(GeneratedField::Payloads),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -2020,8 +1328,8 @@ impl<'de> serde::Deserialize<'de> for Packet {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut sequence__ = None;
-                let mut source_channel__ = None;
-                let mut destination_channel__ = None;
+                let mut source_client__ = None;
+                let mut destination_client__ = None;
                 let mut timeout_timestamp__ = None;
                 let mut payloads__ = None;
                 while let Some(k) = map_.next_key()? {
@@ -2034,17 +1342,17 @@ impl<'de> serde::Deserialize<'de> for Packet {
                                 Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
                             ;
                         }
-                        GeneratedField::SourceChannel => {
-                            if source_channel__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("sourceChannel"));
+                        GeneratedField::SourceClient => {
+                            if source_client__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sourceClient"));
                             }
-                            source_channel__ = Some(map_.next_value()?);
+                            source_client__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::DestinationChannel => {
-                            if destination_channel__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("destinationChannel"));
+                        GeneratedField::DestinationClient => {
+                            if destination_client__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("destinationClient"));
                             }
-                            destination_channel__ = Some(map_.next_value()?);
+                            destination_client__ = Some(map_.next_value()?);
                         }
                         GeneratedField::TimeoutTimestamp => {
                             if timeout_timestamp__.is_some() {
@@ -2064,8 +1372,8 @@ impl<'de> serde::Deserialize<'de> for Packet {
                 }
                 Ok(Packet {
                     sequence: sequence__.unwrap_or_default(),
-                    source_channel: source_channel__.unwrap_or_default(),
-                    destination_channel: destination_channel__.unwrap_or_default(),
+                    source_client: source_client__.unwrap_or_default(),
+                    destination_client: destination_client__.unwrap_or_default(),
                     timeout_timestamp: timeout_timestamp__.unwrap_or_default(),
                     payloads: payloads__.unwrap_or_default(),
                 })
@@ -2090,7 +1398,7 @@ impl serde::Serialize for PacketSequence {
         }
         let mut struct_ser = serializer.serialize_struct("ibc.core.channel.v2.PacketSequence", len)?;
         if true {
-            struct_ser.serialize_field("channelId", &self.channel_id)?;
+            struct_ser.serialize_field("clientId", &self.client_id)?;
         }
         if true {
             #[allow(clippy::needless_borrow)]
@@ -2106,14 +1414,14 @@ impl<'de> serde::Deserialize<'de> for PacketSequence {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "channel_id",
-            "channelId",
+            "client_id",
+            "clientId",
             "sequence",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            ChannelId,
+            ClientId,
             Sequence,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -2136,7 +1444,7 @@ impl<'de> serde::Deserialize<'de> for PacketSequence {
                         E: serde::de::Error,
                     {
                         match value {
-                            "channelId" | "channel_id" => Ok(GeneratedField::ChannelId),
+                            "clientId" | "client_id" => Ok(GeneratedField::ClientId),
                             "sequence" => Ok(GeneratedField::Sequence),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -2157,15 +1465,15 @@ impl<'de> serde::Deserialize<'de> for PacketSequence {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut channel_id__ = None;
+                let mut client_id__ = None;
                 let mut sequence__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::ChannelId => {
-                            if channel_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("channelId"));
+                        GeneratedField::ClientId => {
+                            if client_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("clientId"));
                             }
-                            channel_id__ = Some(map_.next_value()?);
+                            client_id__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Sequence => {
                             if sequence__.is_some() {
@@ -2178,7 +1486,7 @@ impl<'de> serde::Deserialize<'de> for PacketSequence {
                     }
                 }
                 Ok(PacketSequence {
-                    channel_id: channel_id__.unwrap_or_default(),
+                    client_id: client_id__.unwrap_or_default(),
                     sequence: sequence__.unwrap_or_default(),
                 })
             }
@@ -2205,7 +1513,7 @@ impl serde::Serialize for PacketState {
         }
         let mut struct_ser = serializer.serialize_struct("ibc.core.channel.v2.PacketState", len)?;
         if true {
-            struct_ser.serialize_field("channelId", &self.channel_id)?;
+            struct_ser.serialize_field("clientId", &self.client_id)?;
         }
         if true {
             #[allow(clippy::needless_borrow)]
@@ -2225,15 +1533,15 @@ impl<'de> serde::Deserialize<'de> for PacketState {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "channel_id",
-            "channelId",
+            "client_id",
+            "clientId",
             "sequence",
             "data",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            ChannelId,
+            ClientId,
             Sequence,
             Data,
         }
@@ -2257,7 +1565,7 @@ impl<'de> serde::Deserialize<'de> for PacketState {
                         E: serde::de::Error,
                     {
                         match value {
-                            "channelId" | "channel_id" => Ok(GeneratedField::ChannelId),
+                            "clientId" | "client_id" => Ok(GeneratedField::ClientId),
                             "sequence" => Ok(GeneratedField::Sequence),
                             "data" => Ok(GeneratedField::Data),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -2279,16 +1587,16 @@ impl<'de> serde::Deserialize<'de> for PacketState {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut channel_id__ = None;
+                let mut client_id__ = None;
                 let mut sequence__ = None;
                 let mut data__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::ChannelId => {
-                            if channel_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("channelId"));
+                        GeneratedField::ClientId => {
+                            if client_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("clientId"));
                             }
-                            channel_id__ = Some(map_.next_value()?);
+                            client_id__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Sequence => {
                             if sequence__.is_some() {
@@ -2309,7 +1617,7 @@ impl<'de> serde::Deserialize<'de> for PacketState {
                     }
                 }
                 Ok(PacketState {
-                    channel_id: channel_id__.unwrap_or_default(),
+                    client_id: client_id__.unwrap_or_default(),
                     sequence: sequence__.unwrap_or_default(),
                     data: data__.unwrap_or_default(),
                 })
@@ -2559,189 +1867,6 @@ impl<'de> serde::Deserialize<'de> for Payload {
         deserializer.deserialize_struct("ibc.core.channel.v2.Payload", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for QueryChannelRequest {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> core::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if true {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("ibc.core.channel.v2.QueryChannelRequest", len)?;
-        if true {
-            struct_ser.serialize_field("channelId", &self.channel_id)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for QueryChannelRequest {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "channel_id",
-            "channelId",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            ChannelId,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> core::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> core::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "channelId" | "channel_id" => Ok(GeneratedField::ChannelId),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = QueryChannelRequest;
-
-            fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                formatter.write_str("struct ibc.core.channel.v2.QueryChannelRequest")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> core::result::Result<QueryChannelRequest, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut channel_id__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::ChannelId => {
-                            if channel_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("channelId"));
-                            }
-                            channel_id__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(QueryChannelRequest {
-                    channel_id: channel_id__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("ibc.core.channel.v2.QueryChannelRequest", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for QueryChannelResponse {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> core::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if true {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("ibc.core.channel.v2.QueryChannelResponse", len)?;
-        if let Some(v) = self.channel.as_ref() {
-            struct_ser.serialize_field("channel", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for QueryChannelResponse {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "channel",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Channel,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> core::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> core::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "channel" => Ok(GeneratedField::Channel),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = QueryChannelResponse;
-
-            fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                formatter.write_str("struct ibc.core.channel.v2.QueryChannelResponse")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> core::result::Result<QueryChannelResponse, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut channel__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Channel => {
-                            if channel__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("channel"));
-                            }
-                            channel__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(QueryChannelResponse {
-                    channel: channel__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("ibc.core.channel.v2.QueryChannelResponse", FIELDS, GeneratedVisitor)
-    }
-}
 impl serde::Serialize for QueryNextSequenceSendRequest {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> core::result::Result<S::Ok, S::Error>
@@ -2755,7 +1880,7 @@ impl serde::Serialize for QueryNextSequenceSendRequest {
         }
         let mut struct_ser = serializer.serialize_struct("ibc.core.channel.v2.QueryNextSequenceSendRequest", len)?;
         if true {
-            struct_ser.serialize_field("channelId", &self.channel_id)?;
+            struct_ser.serialize_field("clientId", &self.client_id)?;
         }
         struct_ser.end()
     }
@@ -2767,13 +1892,13 @@ impl<'de> serde::Deserialize<'de> for QueryNextSequenceSendRequest {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "channel_id",
-            "channelId",
+            "client_id",
+            "clientId",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            ChannelId,
+            ClientId,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> core::result::Result<GeneratedField, D::Error>
@@ -2795,7 +1920,7 @@ impl<'de> serde::Deserialize<'de> for QueryNextSequenceSendRequest {
                         E: serde::de::Error,
                     {
                         match value {
-                            "channelId" | "channel_id" => Ok(GeneratedField::ChannelId),
+                            "clientId" | "client_id" => Ok(GeneratedField::ClientId),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2815,19 +1940,19 @@ impl<'de> serde::Deserialize<'de> for QueryNextSequenceSendRequest {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut channel_id__ = None;
+                let mut client_id__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::ChannelId => {
-                            if channel_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("channelId"));
+                        GeneratedField::ClientId => {
+                            if client_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("clientId"));
                             }
-                            channel_id__ = Some(map_.next_value()?);
+                            client_id__ = Some(map_.next_value()?);
                         }
                     }
                 }
                 Ok(QueryNextSequenceSendRequest {
-                    channel_id: channel_id__.unwrap_or_default(),
+                    client_id: client_id__.unwrap_or_default(),
                 })
             }
         }
@@ -2983,7 +2108,7 @@ impl serde::Serialize for QueryPacketAcknowledgementRequest {
         }
         let mut struct_ser = serializer.serialize_struct("ibc.core.channel.v2.QueryPacketAcknowledgementRequest", len)?;
         if true {
-            struct_ser.serialize_field("channelId", &self.channel_id)?;
+            struct_ser.serialize_field("clientId", &self.client_id)?;
         }
         if true {
             #[allow(clippy::needless_borrow)]
@@ -2999,14 +2124,14 @@ impl<'de> serde::Deserialize<'de> for QueryPacketAcknowledgementRequest {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "channel_id",
-            "channelId",
+            "client_id",
+            "clientId",
             "sequence",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            ChannelId,
+            ClientId,
             Sequence,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -3029,7 +2154,7 @@ impl<'de> serde::Deserialize<'de> for QueryPacketAcknowledgementRequest {
                         E: serde::de::Error,
                     {
                         match value {
-                            "channelId" | "channel_id" => Ok(GeneratedField::ChannelId),
+                            "clientId" | "client_id" => Ok(GeneratedField::ClientId),
                             "sequence" => Ok(GeneratedField::Sequence),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -3050,15 +2175,15 @@ impl<'de> serde::Deserialize<'de> for QueryPacketAcknowledgementRequest {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut channel_id__ = None;
+                let mut client_id__ = None;
                 let mut sequence__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::ChannelId => {
-                            if channel_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("channelId"));
+                        GeneratedField::ClientId => {
+                            if client_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("clientId"));
                             }
-                            channel_id__ = Some(map_.next_value()?);
+                            client_id__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Sequence => {
                             if sequence__.is_some() {
@@ -3071,7 +2196,7 @@ impl<'de> serde::Deserialize<'de> for QueryPacketAcknowledgementRequest {
                     }
                 }
                 Ok(QueryPacketAcknowledgementRequest {
-                    channel_id: channel_id__.unwrap_or_default(),
+                    client_id: client_id__.unwrap_or_default(),
                     sequence: sequence__.unwrap_or_default(),
                 })
             }
@@ -3230,7 +2355,7 @@ impl serde::Serialize for QueryPacketAcknowledgementsRequest {
         }
         let mut struct_ser = serializer.serialize_struct("ibc.core.channel.v2.QueryPacketAcknowledgementsRequest", len)?;
         if true {
-            struct_ser.serialize_field("channelId", &self.channel_id)?;
+            struct_ser.serialize_field("clientId", &self.client_id)?;
         }
         if let Some(v) = self.pagination.as_ref() {
             struct_ser.serialize_field("pagination", v)?;
@@ -3248,8 +2373,8 @@ impl<'de> serde::Deserialize<'de> for QueryPacketAcknowledgementsRequest {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "channel_id",
-            "channelId",
+            "client_id",
+            "clientId",
             "pagination",
             "packet_commitment_sequences",
             "packetCommitmentSequences",
@@ -3257,7 +2382,7 @@ impl<'de> serde::Deserialize<'de> for QueryPacketAcknowledgementsRequest {
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            ChannelId,
+            ClientId,
             Pagination,
             PacketCommitmentSequences,
         }
@@ -3281,7 +2406,7 @@ impl<'de> serde::Deserialize<'de> for QueryPacketAcknowledgementsRequest {
                         E: serde::de::Error,
                     {
                         match value {
-                            "channelId" | "channel_id" => Ok(GeneratedField::ChannelId),
+                            "clientId" | "client_id" => Ok(GeneratedField::ClientId),
                             "pagination" => Ok(GeneratedField::Pagination),
                             "packetCommitmentSequences" | "packet_commitment_sequences" => Ok(GeneratedField::PacketCommitmentSequences),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -3303,16 +2428,16 @@ impl<'de> serde::Deserialize<'de> for QueryPacketAcknowledgementsRequest {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut channel_id__ = None;
+                let mut client_id__ = None;
                 let mut pagination__ = None;
                 let mut packet_commitment_sequences__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::ChannelId => {
-                            if channel_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("channelId"));
+                        GeneratedField::ClientId => {
+                            if client_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("clientId"));
                             }
-                            channel_id__ = Some(map_.next_value()?);
+                            client_id__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Pagination => {
                             if pagination__.is_some() {
@@ -3332,7 +2457,7 @@ impl<'de> serde::Deserialize<'de> for QueryPacketAcknowledgementsRequest {
                     }
                 }
                 Ok(QueryPacketAcknowledgementsRequest {
-                    channel_id: channel_id__.unwrap_or_default(),
+                    client_id: client_id__.unwrap_or_default(),
                     pagination: pagination__,
                     packet_commitment_sequences: packet_commitment_sequences__.unwrap_or_default(),
                 })
@@ -3482,7 +2607,7 @@ impl serde::Serialize for QueryPacketCommitmentRequest {
         }
         let mut struct_ser = serializer.serialize_struct("ibc.core.channel.v2.QueryPacketCommitmentRequest", len)?;
         if true {
-            struct_ser.serialize_field("channelId", &self.channel_id)?;
+            struct_ser.serialize_field("clientId", &self.client_id)?;
         }
         if true {
             #[allow(clippy::needless_borrow)]
@@ -3498,14 +2623,14 @@ impl<'de> serde::Deserialize<'de> for QueryPacketCommitmentRequest {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "channel_id",
-            "channelId",
+            "client_id",
+            "clientId",
             "sequence",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            ChannelId,
+            ClientId,
             Sequence,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -3528,7 +2653,7 @@ impl<'de> serde::Deserialize<'de> for QueryPacketCommitmentRequest {
                         E: serde::de::Error,
                     {
                         match value {
-                            "channelId" | "channel_id" => Ok(GeneratedField::ChannelId),
+                            "clientId" | "client_id" => Ok(GeneratedField::ClientId),
                             "sequence" => Ok(GeneratedField::Sequence),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -3549,15 +2674,15 @@ impl<'de> serde::Deserialize<'de> for QueryPacketCommitmentRequest {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut channel_id__ = None;
+                let mut client_id__ = None;
                 let mut sequence__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::ChannelId => {
-                            if channel_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("channelId"));
+                        GeneratedField::ClientId => {
+                            if client_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("clientId"));
                             }
-                            channel_id__ = Some(map_.next_value()?);
+                            client_id__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Sequence => {
                             if sequence__.is_some() {
@@ -3570,7 +2695,7 @@ impl<'de> serde::Deserialize<'de> for QueryPacketCommitmentRequest {
                     }
                 }
                 Ok(QueryPacketCommitmentRequest {
-                    channel_id: channel_id__.unwrap_or_default(),
+                    client_id: client_id__.unwrap_or_default(),
                     sequence: sequence__.unwrap_or_default(),
                 })
             }
@@ -3726,7 +2851,7 @@ impl serde::Serialize for QueryPacketCommitmentsRequest {
         }
         let mut struct_ser = serializer.serialize_struct("ibc.core.channel.v2.QueryPacketCommitmentsRequest", len)?;
         if true {
-            struct_ser.serialize_field("channelId", &self.channel_id)?;
+            struct_ser.serialize_field("clientId", &self.client_id)?;
         }
         if let Some(v) = self.pagination.as_ref() {
             struct_ser.serialize_field("pagination", v)?;
@@ -3741,14 +2866,14 @@ impl<'de> serde::Deserialize<'de> for QueryPacketCommitmentsRequest {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "channel_id",
-            "channelId",
+            "client_id",
+            "clientId",
             "pagination",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            ChannelId,
+            ClientId,
             Pagination,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -3771,7 +2896,7 @@ impl<'de> serde::Deserialize<'de> for QueryPacketCommitmentsRequest {
                         E: serde::de::Error,
                     {
                         match value {
-                            "channelId" | "channel_id" => Ok(GeneratedField::ChannelId),
+                            "clientId" | "client_id" => Ok(GeneratedField::ClientId),
                             "pagination" => Ok(GeneratedField::Pagination),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -3792,15 +2917,15 @@ impl<'de> serde::Deserialize<'de> for QueryPacketCommitmentsRequest {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut channel_id__ = None;
+                let mut client_id__ = None;
                 let mut pagination__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::ChannelId => {
-                            if channel_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("channelId"));
+                        GeneratedField::ClientId => {
+                            if client_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("clientId"));
                             }
-                            channel_id__ = Some(map_.next_value()?);
+                            client_id__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Pagination => {
                             if pagination__.is_some() {
@@ -3811,7 +2936,7 @@ impl<'de> serde::Deserialize<'de> for QueryPacketCommitmentsRequest {
                     }
                 }
                 Ok(QueryPacketCommitmentsRequest {
-                    channel_id: channel_id__.unwrap_or_default(),
+                    client_id: client_id__.unwrap_or_default(),
                     pagination: pagination__,
                 })
             }
@@ -3958,15 +3083,9 @@ impl serde::Serialize for QueryPacketReceiptRequest {
         if true {
             len += 1;
         }
-        if true {
-            len += 1;
-        }
         let mut struct_ser = serializer.serialize_struct("ibc.core.channel.v2.QueryPacketReceiptRequest", len)?;
         if true {
-            struct_ser.serialize_field("portId", &self.port_id)?;
-        }
-        if true {
-            struct_ser.serialize_field("channelId", &self.channel_id)?;
+            struct_ser.serialize_field("clientId", &self.client_id)?;
         }
         if true {
             #[allow(clippy::needless_borrow)]
@@ -3982,17 +3101,14 @@ impl<'de> serde::Deserialize<'de> for QueryPacketReceiptRequest {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "port_id",
-            "portId",
-            "channel_id",
-            "channelId",
+            "client_id",
+            "clientId",
             "sequence",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            PortId,
-            ChannelId,
+            ClientId,
             Sequence,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -4015,8 +3131,7 @@ impl<'de> serde::Deserialize<'de> for QueryPacketReceiptRequest {
                         E: serde::de::Error,
                     {
                         match value {
-                            "portId" | "port_id" => Ok(GeneratedField::PortId),
-                            "channelId" | "channel_id" => Ok(GeneratedField::ChannelId),
+                            "clientId" | "client_id" => Ok(GeneratedField::ClientId),
                             "sequence" => Ok(GeneratedField::Sequence),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -4037,22 +3152,15 @@ impl<'de> serde::Deserialize<'de> for QueryPacketReceiptRequest {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut port_id__ = None;
-                let mut channel_id__ = None;
+                let mut client_id__ = None;
                 let mut sequence__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::PortId => {
-                            if port_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("portId"));
+                        GeneratedField::ClientId => {
+                            if client_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("clientId"));
                             }
-                            port_id__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::ChannelId => {
-                            if channel_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("channelId"));
-                            }
-                            channel_id__ = Some(map_.next_value()?);
+                            client_id__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Sequence => {
                             if sequence__.is_some() {
@@ -4065,8 +3173,7 @@ impl<'de> serde::Deserialize<'de> for QueryPacketReceiptRequest {
                     }
                 }
                 Ok(QueryPacketReceiptRequest {
-                    port_id: port_id__.unwrap_or_default(),
-                    channel_id: channel_id__.unwrap_or_default(),
+                    client_id: client_id__.unwrap_or_default(),
                     sequence: sequence__.unwrap_or_default(),
                 })
             }
@@ -4219,7 +3326,7 @@ impl serde::Serialize for QueryUnreceivedAcksRequest {
         }
         let mut struct_ser = serializer.serialize_struct("ibc.core.channel.v2.QueryUnreceivedAcksRequest", len)?;
         if true {
-            struct_ser.serialize_field("channelId", &self.channel_id)?;
+            struct_ser.serialize_field("clientId", &self.client_id)?;
         }
         if true {
             struct_ser.serialize_field("packetAckSequences", &self.packet_ack_sequences.iter().map(::alloc::string::ToString::to_string).collect::<::alloc::vec::Vec<_>>())?;
@@ -4234,15 +3341,15 @@ impl<'de> serde::Deserialize<'de> for QueryUnreceivedAcksRequest {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "channel_id",
-            "channelId",
+            "client_id",
+            "clientId",
             "packet_ack_sequences",
             "packetAckSequences",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            ChannelId,
+            ClientId,
             PacketAckSequences,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -4265,7 +3372,7 @@ impl<'de> serde::Deserialize<'de> for QueryUnreceivedAcksRequest {
                         E: serde::de::Error,
                     {
                         match value {
-                            "channelId" | "channel_id" => Ok(GeneratedField::ChannelId),
+                            "clientId" | "client_id" => Ok(GeneratedField::ClientId),
                             "packetAckSequences" | "packet_ack_sequences" => Ok(GeneratedField::PacketAckSequences),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -4286,15 +3393,15 @@ impl<'de> serde::Deserialize<'de> for QueryUnreceivedAcksRequest {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut channel_id__ = None;
+                let mut client_id__ = None;
                 let mut packet_ack_sequences__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::ChannelId => {
-                            if channel_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("channelId"));
+                        GeneratedField::ClientId => {
+                            if client_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("clientId"));
                             }
-                            channel_id__ = Some(map_.next_value()?);
+                            client_id__ = Some(map_.next_value()?);
                         }
                         GeneratedField::PacketAckSequences => {
                             if packet_ack_sequences__.is_some() {
@@ -4308,7 +3415,7 @@ impl<'de> serde::Deserialize<'de> for QueryUnreceivedAcksRequest {
                     }
                 }
                 Ok(QueryUnreceivedAcksRequest {
-                    channel_id: channel_id__.unwrap_or_default(),
+                    client_id: client_id__.unwrap_or_default(),
                     packet_ack_sequences: packet_ack_sequences__.unwrap_or_default(),
                 })
             }
@@ -4443,7 +3550,7 @@ impl serde::Serialize for QueryUnreceivedPacketsRequest {
         }
         let mut struct_ser = serializer.serialize_struct("ibc.core.channel.v2.QueryUnreceivedPacketsRequest", len)?;
         if true {
-            struct_ser.serialize_field("channelId", &self.channel_id)?;
+            struct_ser.serialize_field("clientId", &self.client_id)?;
         }
         if true {
             struct_ser.serialize_field("sequences", &self.sequences.iter().map(::alloc::string::ToString::to_string).collect::<::alloc::vec::Vec<_>>())?;
@@ -4458,14 +3565,14 @@ impl<'de> serde::Deserialize<'de> for QueryUnreceivedPacketsRequest {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "channel_id",
-            "channelId",
+            "client_id",
+            "clientId",
             "sequences",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            ChannelId,
+            ClientId,
             Sequences,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -4488,7 +3595,7 @@ impl<'de> serde::Deserialize<'de> for QueryUnreceivedPacketsRequest {
                         E: serde::de::Error,
                     {
                         match value {
-                            "channelId" | "channel_id" => Ok(GeneratedField::ChannelId),
+                            "clientId" | "client_id" => Ok(GeneratedField::ClientId),
                             "sequences" => Ok(GeneratedField::Sequences),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -4509,15 +3616,15 @@ impl<'de> serde::Deserialize<'de> for QueryUnreceivedPacketsRequest {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut channel_id__ = None;
+                let mut client_id__ = None;
                 let mut sequences__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::ChannelId => {
-                            if channel_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("channelId"));
+                        GeneratedField::ClientId => {
+                            if client_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("clientId"));
                             }
-                            channel_id__ = Some(map_.next_value()?);
+                            client_id__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Sequences => {
                             if sequences__.is_some() {
@@ -4531,7 +3638,7 @@ impl<'de> serde::Deserialize<'de> for QueryUnreceivedPacketsRequest {
                     }
                 }
                 Ok(QueryUnreceivedPacketsRequest {
-                    channel_id: channel_id__.unwrap_or_default(),
+                    client_id: client_id__.unwrap_or_default(),
                     sequences: sequences__.unwrap_or_default(),
                 })
             }

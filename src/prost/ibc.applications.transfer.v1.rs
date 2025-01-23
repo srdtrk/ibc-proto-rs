@@ -29,7 +29,7 @@ impl ::prost::Name for Params {
 /// the coin should be unwinded to its native chain before forwarding.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Forwarding {
-    /// optional unwinding for the token transfered
+    /// optional unwinding for the token transferred
     #[prost(bool, tag = "1")]
     pub unwind: bool,
     /// optional intermediate path through which packet will be forwarded

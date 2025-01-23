@@ -1515,7 +1515,7 @@ pub mod query_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        /// Gets all incentivized packets for a specific channel
+        /// IncentivizedPacketsForChannel retrieves all incentivized packets for a specific channel
         pub async fn incentivized_packets_for_channel(
             &mut self,
             request: impl tonic::IntoRequest<
@@ -1769,7 +1769,7 @@ pub mod query_server {
             tonic::Response<super::QueryIncentivizedPacketResponse>,
             tonic::Status,
         >;
-        /// Gets all incentivized packets for a specific channel
+        /// IncentivizedPacketsForChannel retrieves all incentivized packets for a specific channel
         async fn incentivized_packets_for_channel(
             &self,
             request: tonic::Request<super::QueryIncentivizedPacketsForChannelRequest>,
