@@ -66,13 +66,6 @@ pub mod ibc {
                 include_proto!("ibc.applications.transfer.v2.serde.rs");
             }
         }
-        pub mod fee {
-            pub mod v1 {
-                include_proto!("ibc.applications.fee.v1.rs");
-                #[cfg(feature = "serde")]
-                include_proto!("ibc.applications.fee.v1.serde.rs");
-            }
-        }
         pub mod interchain_accounts {
             pub mod v1 {
                 include_proto!("ibc.applications.interchain_accounts.v1.rs");
