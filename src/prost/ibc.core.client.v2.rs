@@ -19,6 +19,43 @@ impl ::prost::Name for CounterpartyInfo {
         "/ibc.core.client.v2.CounterpartyInfo".into()
     }
 }
+/// GenesisCounterpartyInfo defines the state associating a client with a counterparty.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenesisCounterpartyInfo {
+    /// ClientId is the ID of the given client.
+    #[prost(string, tag = "1")]
+    pub client_id: ::prost::alloc::string::String,
+    /// CounterpartyInfo is the counterparty info of the given client.
+    #[prost(message, optional, tag = "2")]
+    pub counterparty_info: ::core::option::Option<CounterpartyInfo>,
+}
+impl ::prost::Name for GenesisCounterpartyInfo {
+    const NAME: &'static str = "GenesisCounterpartyInfo";
+    const PACKAGE: &'static str = "ibc.core.client.v2";
+    fn full_name() -> ::prost::alloc::string::String {
+        "ibc.core.client.v2.GenesisCounterpartyInfo".into()
+    }
+    fn type_url() -> ::prost::alloc::string::String {
+        "/ibc.core.client.v2.GenesisCounterpartyInfo".into()
+    }
+}
+/// GenesisState defines the ibc client v2 submodule's genesis state.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenesisState {
+    /// counterparty info for each client
+    #[prost(message, repeated, tag = "1")]
+    pub counterparty_infos: ::prost::alloc::vec::Vec<GenesisCounterpartyInfo>,
+}
+impl ::prost::Name for GenesisState {
+    const NAME: &'static str = "GenesisState";
+    const PACKAGE: &'static str = "ibc.core.client.v2";
+    fn full_name() -> ::prost::alloc::string::String {
+        "ibc.core.client.v2.GenesisState".into()
+    }
+    fn type_url() -> ::prost::alloc::string::String {
+        "/ibc.core.client.v2.GenesisState".into()
+    }
+}
 /// MsgRegisterCounterparty defines a message to register a counterparty on a client
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MsgRegisterCounterparty {
@@ -62,7 +99,7 @@ impl ::prost::Name for MsgRegisterCounterpartyResponse {
 }
 /// Generated client implementations.
 #[cfg(feature = "client")]
-pub mod counterparty_msg_client {
+pub mod msg_client {
     #![allow(
         unused_variables,
         dead_code,
@@ -72,13 +109,13 @@ pub mod counterparty_msg_client {
     )]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// CounterpartyMsg defines the ibc/client CounterpartyMsg service.
+    /// Msg defines the ibc/client/v2 Msg service.
     #[derive(Debug, Clone)]
-    pub struct CounterpartyMsgClient<T> {
+    pub struct MsgClient<T> {
         inner: tonic::client::Grpc<T>,
     }
     #[cfg(feature = "transport")]
-    impl CounterpartyMsgClient<tonic::transport::Channel> {
+    impl MsgClient<tonic::transport::Channel> {
         /// Attempt to create a new client by connecting to a given endpoint.
         pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
         where
@@ -89,7 +126,7 @@ pub mod counterparty_msg_client {
             Ok(Self::new(conn))
         }
     }
-    impl<T> CounterpartyMsgClient<T>
+    impl<T> MsgClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
         T::Error: Into<StdError>,
@@ -107,7 +144,7 @@ pub mod counterparty_msg_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> CounterpartyMsgClient<InterceptedService<T, F>>
+        ) -> MsgClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -121,7 +158,7 @@ pub mod counterparty_msg_client {
                 http::Request<tonic::body::BoxBody>,
             >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
         {
-            CounterpartyMsgClient::new(InterceptedService::new(inner, interceptor))
+            MsgClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -172,15 +209,12 @@ pub mod counterparty_msg_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/ibc.core.client.v2.CounterpartyMsg/RegisterCounterparty",
+                "/ibc.core.client.v2.Msg/RegisterCounterparty",
             );
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(
-                    GrpcMethod::new(
-                        "ibc.core.client.v2.CounterpartyMsg",
-                        "RegisterCounterparty",
-                    ),
+                    GrpcMethod::new("ibc.core.client.v2.Msg", "RegisterCounterparty"),
                 );
             self.inner.unary(req, path, codec).await
         }
@@ -188,7 +222,7 @@ pub mod counterparty_msg_client {
 }
 /// Generated server implementations.
 #[cfg(feature = "server")]
-pub mod counterparty_msg_server {
+pub mod msg_server {
     #![allow(
         unused_variables,
         dead_code,
@@ -197,9 +231,9 @@ pub mod counterparty_msg_server {
         clippy::let_unit_value,
     )]
     use tonic::codegen::*;
-    /// Generated trait containing gRPC methods that should be implemented for use with CounterpartyMsgServer.
+    /// Generated trait containing gRPC methods that should be implemented for use with MsgServer.
     #[async_trait]
-    pub trait CounterpartyMsg: std::marker::Send + std::marker::Sync + 'static {
+    pub trait Msg: std::marker::Send + std::marker::Sync + 'static {
         /// RegisterCounterparty defines a rpc handler method for MsgRegisterCounterparty.
         async fn register_counterparty(
             &self,
@@ -209,16 +243,16 @@ pub mod counterparty_msg_server {
             tonic::Status,
         >;
     }
-    /// CounterpartyMsg defines the ibc/client CounterpartyMsg service.
+    /// Msg defines the ibc/client/v2 Msg service.
     #[derive(Debug)]
-    pub struct CounterpartyMsgServer<T> {
+    pub struct MsgServer<T> {
         inner: Arc<T>,
         accept_compression_encodings: EnabledCompressionEncodings,
         send_compression_encodings: EnabledCompressionEncodings,
         max_decoding_message_size: Option<usize>,
         max_encoding_message_size: Option<usize>,
     }
-    impl<T> CounterpartyMsgServer<T> {
+    impl<T> MsgServer<T> {
         pub fn new(inner: T) -> Self {
             Self::from_arc(Arc::new(inner))
         }
@@ -269,9 +303,9 @@ pub mod counterparty_msg_server {
             self
         }
     }
-    impl<T, B> tonic::codegen::Service<http::Request<B>> for CounterpartyMsgServer<T>
+    impl<T, B> tonic::codegen::Service<http::Request<B>> for MsgServer<T>
     where
-        T: CounterpartyMsg,
+        T: Msg,
         B: Body + std::marker::Send + 'static,
         B::Error: Into<StdError> + std::marker::Send + 'static,
     {
@@ -286,11 +320,11 @@ pub mod counterparty_msg_server {
         }
         fn call(&mut self, req: http::Request<B>) -> Self::Future {
             match req.uri().path() {
-                "/ibc.core.client.v2.CounterpartyMsg/RegisterCounterparty" => {
+                "/ibc.core.client.v2.Msg/RegisterCounterparty" => {
                     #[allow(non_camel_case_types)]
-                    struct RegisterCounterpartySvc<T: CounterpartyMsg>(pub Arc<T>);
+                    struct RegisterCounterpartySvc<T: Msg>(pub Arc<T>);
                     impl<
-                        T: CounterpartyMsg,
+                        T: Msg,
                     > tonic::server::UnaryService<super::MsgRegisterCounterparty>
                     for RegisterCounterpartySvc<T> {
                         type Response = super::MsgRegisterCounterpartyResponse;
@@ -304,11 +338,7 @@ pub mod counterparty_msg_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as CounterpartyMsg>::register_counterparty(
-                                        &inner,
-                                        request,
-                                    )
-                                    .await
+                                <T as Msg>::register_counterparty(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -355,7 +385,7 @@ pub mod counterparty_msg_server {
             }
         }
     }
-    impl<T> Clone for CounterpartyMsgServer<T> {
+    impl<T> Clone for MsgServer<T> {
         fn clone(&self) -> Self {
             let inner = self.inner.clone();
             Self {
@@ -368,8 +398,347 @@ pub mod counterparty_msg_server {
         }
     }
     /// Generated gRPC service name
-    pub const SERVICE_NAME: &str = "ibc.core.client.v2.CounterpartyMsg";
-    impl<T> tonic::server::NamedService for CounterpartyMsgServer<T> {
+    pub const SERVICE_NAME: &str = "ibc.core.client.v2.Msg";
+    impl<T> tonic::server::NamedService for MsgServer<T> {
+        const NAME: &'static str = SERVICE_NAME;
+    }
+}
+/// QueryCounterpartyInfoRequest is the request type for the Query/CounterpartyInfo RPC
+/// method
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QueryCounterpartyInfoRequest {
+    /// client state unique identifier
+    #[prost(string, tag = "1")]
+    pub client_id: ::prost::alloc::string::String,
+}
+impl ::prost::Name for QueryCounterpartyInfoRequest {
+    const NAME: &'static str = "QueryCounterpartyInfoRequest";
+    const PACKAGE: &'static str = "ibc.core.client.v2";
+    fn full_name() -> ::prost::alloc::string::String {
+        "ibc.core.client.v2.QueryCounterpartyInfoRequest".into()
+    }
+    fn type_url() -> ::prost::alloc::string::String {
+        "/ibc.core.client.v2.QueryCounterpartyInfoRequest".into()
+    }
+}
+/// QueryCounterpartyInfoResponse is the response type for the
+/// Query/CounterpartyInfo RPC method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QueryCounterpartyInfoResponse {
+    #[prost(message, optional, tag = "1")]
+    pub counterparty_info: ::core::option::Option<CounterpartyInfo>,
+}
+impl ::prost::Name for QueryCounterpartyInfoResponse {
+    const NAME: &'static str = "QueryCounterpartyInfoResponse";
+    const PACKAGE: &'static str = "ibc.core.client.v2";
+    fn full_name() -> ::prost::alloc::string::String {
+        "ibc.core.client.v2.QueryCounterpartyInfoResponse".into()
+    }
+    fn type_url() -> ::prost::alloc::string::String {
+        "/ibc.core.client.v2.QueryCounterpartyInfoResponse".into()
+    }
+}
+/// Generated client implementations.
+#[cfg(feature = "client")]
+pub mod query_client {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Query provides defines the gRPC querier service
+    #[derive(Debug, Clone)]
+    pub struct QueryClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    #[cfg(feature = "transport")]
+    impl QueryClient<tonic::transport::Channel> {
+        /// Attempt to create a new client by connecting to a given endpoint.
+        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
+        where
+            D: TryInto<tonic::transport::Endpoint>,
+            D::Error: Into<StdError>,
+        {
+            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
+            Ok(Self::new(conn))
+        }
+    }
+    impl<T> QueryClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> QueryClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
+        {
+            QueryClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// CounterpartyInfo queries an IBC light counter party info.
+        pub async fn counterparty_info(
+            &mut self,
+            request: impl tonic::IntoRequest<super::QueryCounterpartyInfoRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::QueryCounterpartyInfoResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/ibc.core.client.v2.Query/CounterpartyInfo",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("ibc.core.client.v2.Query", "CounterpartyInfo"));
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated server implementations.
+#[cfg(feature = "server")]
+pub mod query_server {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    /// Generated trait containing gRPC methods that should be implemented for use with QueryServer.
+    #[async_trait]
+    pub trait Query: std::marker::Send + std::marker::Sync + 'static {
+        /// CounterpartyInfo queries an IBC light counter party info.
+        async fn counterparty_info(
+            &self,
+            request: tonic::Request<super::QueryCounterpartyInfoRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::QueryCounterpartyInfoResponse>,
+            tonic::Status,
+        >;
+    }
+    /// Query provides defines the gRPC querier service
+    #[derive(Debug)]
+    pub struct QueryServer<T> {
+        inner: Arc<T>,
+        accept_compression_encodings: EnabledCompressionEncodings,
+        send_compression_encodings: EnabledCompressionEncodings,
+        max_decoding_message_size: Option<usize>,
+        max_encoding_message_size: Option<usize>,
+    }
+    impl<T> QueryServer<T> {
+        pub fn new(inner: T) -> Self {
+            Self::from_arc(Arc::new(inner))
+        }
+        pub fn from_arc(inner: Arc<T>) -> Self {
+            Self {
+                inner,
+                accept_compression_encodings: Default::default(),
+                send_compression_encodings: Default::default(),
+                max_decoding_message_size: None,
+                max_encoding_message_size: None,
+            }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> InterceptedService<Self, F>
+        where
+            F: tonic::service::Interceptor,
+        {
+            InterceptedService::new(Self::new(inner), interceptor)
+        }
+        /// Enable decompressing requests with the given encoding.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.accept_compression_encodings.enable(encoding);
+            self
+        }
+        /// Compress responses with the given encoding, if the client supports it.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.send_compression_encodings.enable(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.max_decoding_message_size = Some(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.max_encoding_message_size = Some(limit);
+            self
+        }
+    }
+    impl<T, B> tonic::codegen::Service<http::Request<B>> for QueryServer<T>
+    where
+        T: Query,
+        B: Body + std::marker::Send + 'static,
+        B::Error: Into<StdError> + std::marker::Send + 'static,
+    {
+        type Response = http::Response<tonic::body::BoxBody>;
+        type Error = std::convert::Infallible;
+        type Future = BoxFuture<Self::Response, Self::Error>;
+        fn poll_ready(
+            &mut self,
+            _cx: &mut Context<'_>,
+        ) -> Poll<std::result::Result<(), Self::Error>> {
+            Poll::Ready(Ok(()))
+        }
+        fn call(&mut self, req: http::Request<B>) -> Self::Future {
+            match req.uri().path() {
+                "/ibc.core.client.v2.Query/CounterpartyInfo" => {
+                    #[allow(non_camel_case_types)]
+                    struct CounterpartyInfoSvc<T: Query>(pub Arc<T>);
+                    impl<
+                        T: Query,
+                    > tonic::server::UnaryService<super::QueryCounterpartyInfoRequest>
+                    for CounterpartyInfoSvc<T> {
+                        type Response = super::QueryCounterpartyInfoResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::QueryCounterpartyInfoRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as Query>::counterparty_info(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = CounterpartyInfoSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                _ => {
+                    Box::pin(async move {
+                        let mut response = http::Response::new(empty_body());
+                        let headers = response.headers_mut();
+                        headers
+                            .insert(
+                                tonic::Status::GRPC_STATUS,
+                                (tonic::Code::Unimplemented as i32).into(),
+                            );
+                        headers
+                            .insert(
+                                http::header::CONTENT_TYPE,
+                                tonic::metadata::GRPC_CONTENT_TYPE,
+                            );
+                        Ok(response)
+                    })
+                }
+            }
+        }
+    }
+    impl<T> Clone for QueryServer<T> {
+        fn clone(&self) -> Self {
+            let inner = self.inner.clone();
+            Self {
+                inner,
+                accept_compression_encodings: self.accept_compression_encodings,
+                send_compression_encodings: self.send_compression_encodings,
+                max_decoding_message_size: self.max_decoding_message_size,
+                max_encoding_message_size: self.max_encoding_message_size,
+            }
+        }
+    }
+    /// Generated gRPC service name
+    pub const SERVICE_NAME: &str = "ibc.core.client.v2.Query";
+    impl<T> tonic::server::NamedService for QueryServer<T> {
         const NAME: &'static str = SERVICE_NAME;
     }
 }

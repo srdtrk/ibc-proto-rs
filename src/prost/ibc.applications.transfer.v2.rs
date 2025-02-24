@@ -76,8 +76,8 @@ impl ::prost::Name for FungibleTokenPacketData {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FungibleTokenPacketDataV2 {
     /// the tokens to be transferred
-    #[prost(message, repeated, tag = "1")]
-    pub tokens: ::prost::alloc::vec::Vec<Token>,
+    #[prost(message, optional, tag = "1")]
+    pub token: ::core::option::Option<Token>,
     /// the sender address
     #[prost(string, tag = "2")]
     pub sender: ::prost::alloc::string::String,
@@ -87,9 +87,6 @@ pub struct FungibleTokenPacketDataV2 {
     /// optional memo
     #[prost(string, tag = "4")]
     pub memo: ::prost::alloc::string::String,
-    /// optional forwarding information
-    #[prost(message, optional, tag = "5")]
-    pub forwarding: ::core::option::Option<ForwardingPacketData>,
 }
 impl ::prost::Name for FungibleTokenPacketDataV2 {
     const NAME: &'static str = "FungibleTokenPacketDataV2";
@@ -99,28 +96,6 @@ impl ::prost::Name for FungibleTokenPacketDataV2 {
     }
     fn type_url() -> ::prost::alloc::string::String {
         "/ibc.applications.transfer.v2.FungibleTokenPacketDataV2".into()
-    }
-}
-/// ForwardingPacketData defines a list of port ID, channel ID pairs determining the path
-/// through which a packet must be forwarded, and the destination memo string to be used in the
-/// final destination of the tokens.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ForwardingPacketData {
-    /// optional memo consumed by final destination chain
-    #[prost(string, tag = "1")]
-    pub destination_memo: ::prost::alloc::string::String,
-    /// optional intermediate path through which packet will be forwarded.
-    #[prost(message, repeated, tag = "2")]
-    pub hops: ::prost::alloc::vec::Vec<super::v1::Hop>,
-}
-impl ::prost::Name for ForwardingPacketData {
-    const NAME: &'static str = "ForwardingPacketData";
-    const PACKAGE: &'static str = "ibc.applications.transfer.v2";
-    fn full_name() -> ::prost::alloc::string::String {
-        "ibc.applications.transfer.v2.ForwardingPacketData".into()
-    }
-    fn type_url() -> ::prost::alloc::string::String {
-        "/ibc.applications.transfer.v2.ForwardingPacketData".into()
     }
 }
 /// QueryDenomRequest is the request type for the Query/Denom RPC
@@ -603,10 +578,6 @@ pub struct GenesisState {
     pub total_escrowed: ::prost::alloc::vec::Vec<
         super::super::super::super::cosmos::base::v1beta1::Coin,
     >,
-    /// forwarded_packets contains the forwarded packets stored as part of the
-    /// packet forwarding lifecycle
-    #[prost(message, repeated, tag = "5")]
-    pub forwarded_packets: ::prost::alloc::vec::Vec<ForwardedPacket>,
 }
 impl ::prost::Name for GenesisState {
     const NAME: &'static str = "GenesisState";
@@ -616,25 +587,5 @@ impl ::prost::Name for GenesisState {
     }
     fn type_url() -> ::prost::alloc::string::String {
         "/ibc.applications.transfer.v2.GenesisState".into()
-    }
-}
-/// ForwardedPacket defines the genesis type necessary to retrieve and store forwarded packets.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ForwardedPacket {
-    #[prost(message, optional, tag = "1")]
-    pub forward_key: ::core::option::Option<
-        super::super::super::core::channel::v1::PacketId,
-    >,
-    #[prost(message, optional, tag = "2")]
-    pub packet: ::core::option::Option<super::super::super::core::channel::v1::Packet>,
-}
-impl ::prost::Name for ForwardedPacket {
-    const NAME: &'static str = "ForwardedPacket";
-    const PACKAGE: &'static str = "ibc.applications.transfer.v2";
-    fn full_name() -> ::prost::alloc::string::String {
-        "ibc.applications.transfer.v2.ForwardedPacket".into()
-    }
-    fn type_url() -> ::prost::alloc::string::String {
-        "/ibc.applications.transfer.v2.ForwardedPacket".into()
     }
 }

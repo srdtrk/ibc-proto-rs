@@ -24,28 +24,6 @@ impl ::prost::Name for Params {
         "/ibc.applications.transfer.v1.Params".into()
     }
 }
-/// Forwarding defines a list of port ID, channel ID pairs determining the path
-/// through which a packet must be forwarded, and an unwind boolean indicating if
-/// the coin should be unwinded to its native chain before forwarding.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Forwarding {
-    /// optional unwinding for the token transferred
-    #[prost(bool, tag = "1")]
-    pub unwind: bool,
-    /// optional intermediate path through which packet will be forwarded
-    #[prost(message, repeated, tag = "2")]
-    pub hops: ::prost::alloc::vec::Vec<Hop>,
-}
-impl ::prost::Name for Forwarding {
-    const NAME: &'static str = "Forwarding";
-    const PACKAGE: &'static str = "ibc.applications.transfer.v1";
-    fn full_name() -> ::prost::alloc::string::String {
-        "ibc.applications.transfer.v1.Forwarding".into()
-    }
-    fn type_url() -> ::prost::alloc::string::String {
-        "/ibc.applications.transfer.v1.Forwarding".into()
-    }
-}
 /// Hop defines a port ID, channel ID pair specifying where tokens must be forwarded
 /// next in a multihop transfer.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -76,8 +54,7 @@ pub struct MsgTransfer {
     /// the channel by which the packet will be sent
     #[prost(string, tag = "2")]
     pub source_channel: ::prost::alloc::string::String,
-    /// the token to be transferred. this field has been replaced by the tokens field.
-    #[deprecated]
+    /// token to be transferred
     #[prost(message, optional, tag = "3")]
     pub token: ::core::option::Option<
         super::super::super::super::cosmos::base::v1beta1::Coin,
@@ -101,14 +78,9 @@ pub struct MsgTransfer {
     /// optional memo
     #[prost(string, tag = "8")]
     pub memo: ::prost::alloc::string::String,
-    /// tokens to be transferred
-    #[prost(message, repeated, tag = "9")]
-    pub tokens: ::prost::alloc::vec::Vec<
-        super::super::super::super::cosmos::base::v1beta1::Coin,
-    >,
-    /// optional forwarding information
-    #[prost(message, optional, tag = "10")]
-    pub forwarding: ::core::option::Option<Forwarding>,
+    /// optional encoding
+    #[prost(string, tag = "9")]
+    pub encoding: ::prost::alloc::string::String,
 }
 impl ::prost::Name for MsgTransfer {
     const NAME: &'static str = "MsgTransfer";
@@ -1283,9 +1255,6 @@ pub struct Allocation {
     /// a list only with "*" permits any memo string
     #[prost(string, repeated, tag = "5")]
     pub allowed_packet_data: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Forwarding options that are allowed.
-    #[prost(message, repeated, tag = "6")]
-    pub allowed_forwarding: ::prost::alloc::vec::Vec<AllowedForwarding>,
 }
 impl ::prost::Name for Allocation {
     const NAME: &'static str = "Allocation";
@@ -1295,24 +1264,6 @@ impl ::prost::Name for Allocation {
     }
     fn type_url() -> ::prost::alloc::string::String {
         "/ibc.applications.transfer.v1.Allocation".into()
-    }
-}
-/// AllowedForwarding defines which options are allowed for forwarding.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AllowedForwarding {
-    /// a list of allowed source port ID/channel ID pairs through which the packet is allowed to be forwarded until final
-    /// destination
-    #[prost(message, repeated, tag = "1")]
-    pub hops: ::prost::alloc::vec::Vec<Hop>,
-}
-impl ::prost::Name for AllowedForwarding {
-    const NAME: &'static str = "AllowedForwarding";
-    const PACKAGE: &'static str = "ibc.applications.transfer.v1";
-    fn full_name() -> ::prost::alloc::string::String {
-        "ibc.applications.transfer.v1.AllowedForwarding".into()
-    }
-    fn type_url() -> ::prost::alloc::string::String {
-        "/ibc.applications.transfer.v1.AllowedForwarding".into()
     }
 }
 /// TransferAuthorization allows the grantee to spend up to spend_limit coins from

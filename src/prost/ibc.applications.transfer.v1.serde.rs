@@ -21,9 +21,6 @@ impl serde::Serialize for Allocation {
         if true {
             len += 1;
         }
-        if true {
-            len += 1;
-        }
         let mut struct_ser = serializer.serialize_struct("ibc.applications.transfer.v1.Allocation", len)?;
         if true {
             struct_ser.serialize_field("sourcePort", &self.source_port)?;
@@ -39,9 +36,6 @@ impl serde::Serialize for Allocation {
         }
         if true {
             struct_ser.serialize_field("allowedPacketData", &self.allowed_packet_data)?;
-        }
-        if true {
-            struct_ser.serialize_field("allowedForwarding", &self.allowed_forwarding)?;
         }
         struct_ser.end()
     }
@@ -63,8 +57,6 @@ impl<'de> serde::Deserialize<'de> for Allocation {
             "allowList",
             "allowed_packet_data",
             "allowedPacketData",
-            "allowed_forwarding",
-            "allowedForwarding",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -74,7 +66,6 @@ impl<'de> serde::Deserialize<'de> for Allocation {
             SpendLimit,
             AllowList,
             AllowedPacketData,
-            AllowedForwarding,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> core::result::Result<GeneratedField, D::Error>
@@ -101,7 +92,6 @@ impl<'de> serde::Deserialize<'de> for Allocation {
                             "spendLimit" | "spend_limit" => Ok(GeneratedField::SpendLimit),
                             "allowList" | "allow_list" => Ok(GeneratedField::AllowList),
                             "allowedPacketData" | "allowed_packet_data" => Ok(GeneratedField::AllowedPacketData),
-                            "allowedForwarding" | "allowed_forwarding" => Ok(GeneratedField::AllowedForwarding),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -126,7 +116,6 @@ impl<'de> serde::Deserialize<'de> for Allocation {
                 let mut spend_limit__ = None;
                 let mut allow_list__ = None;
                 let mut allowed_packet_data__ = None;
-                let mut allowed_forwarding__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::SourcePort => {
@@ -159,12 +148,6 @@ impl<'de> serde::Deserialize<'de> for Allocation {
                             }
                             allowed_packet_data__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::AllowedForwarding => {
-                            if allowed_forwarding__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("allowedForwarding"));
-                            }
-                            allowed_forwarding__ = Some(map_.next_value()?);
-                        }
                     }
                 }
                 Ok(Allocation {
@@ -173,102 +156,10 @@ impl<'de> serde::Deserialize<'de> for Allocation {
                     spend_limit: spend_limit__.unwrap_or_default(),
                     allow_list: allow_list__.unwrap_or_default(),
                     allowed_packet_data: allowed_packet_data__.unwrap_or_default(),
-                    allowed_forwarding: allowed_forwarding__.unwrap_or_default(),
                 })
             }
         }
         deserializer.deserialize_struct("ibc.applications.transfer.v1.Allocation", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for AllowedForwarding {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> core::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if true {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("ibc.applications.transfer.v1.AllowedForwarding", len)?;
-        if true {
-            struct_ser.serialize_field("hops", &self.hops)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for AllowedForwarding {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "hops",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Hops,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> core::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> core::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "hops" => Ok(GeneratedField::Hops),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = AllowedForwarding;
-
-            fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                formatter.write_str("struct ibc.applications.transfer.v1.AllowedForwarding")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> core::result::Result<AllowedForwarding, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut hops__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Hops => {
-                            if hops__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("hops"));
-                            }
-                            hops__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(AllowedForwarding {
-                    hops: hops__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("ibc.applications.transfer.v1.AllowedForwarding", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for DenomTrace {
@@ -378,114 +269,6 @@ impl<'de> serde::Deserialize<'de> for DenomTrace {
             }
         }
         deserializer.deserialize_struct("ibc.applications.transfer.v1.DenomTrace", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for Forwarding {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> core::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if true {
-            len += 1;
-        }
-        if true {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("ibc.applications.transfer.v1.Forwarding", len)?;
-        if true {
-            struct_ser.serialize_field("unwind", &self.unwind)?;
-        }
-        if true {
-            struct_ser.serialize_field("hops", &self.hops)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for Forwarding {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "unwind",
-            "hops",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Unwind,
-            Hops,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> core::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> core::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "unwind" => Ok(GeneratedField::Unwind),
-                            "hops" => Ok(GeneratedField::Hops),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = Forwarding;
-
-            fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                formatter.write_str("struct ibc.applications.transfer.v1.Forwarding")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> core::result::Result<Forwarding, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut unwind__ = None;
-                let mut hops__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Unwind => {
-                            if unwind__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("unwind"));
-                            }
-                            unwind__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Hops => {
-                            if hops__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("hops"));
-                            }
-                            hops__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(Forwarding {
-                    unwind: unwind__.unwrap_or_default(),
-                    hops: hops__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("ibc.applications.transfer.v1.Forwarding", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for Hop {
@@ -633,9 +416,6 @@ impl serde::Serialize for MsgTransfer {
         if true {
             len += 1;
         }
-        if true {
-            len += 1;
-        }
         let mut struct_ser = serializer.serialize_struct("ibc.applications.transfer.v1.MsgTransfer", len)?;
         if true {
             struct_ser.serialize_field("sourcePort", &self.source_port)?;
@@ -663,10 +443,7 @@ impl serde::Serialize for MsgTransfer {
             struct_ser.serialize_field("memo", &self.memo)?;
         }
         if true {
-            struct_ser.serialize_field("tokens", &self.tokens)?;
-        }
-        if let Some(v) = self.forwarding.as_ref() {
-            struct_ser.serialize_field("forwarding", v)?;
+            struct_ser.serialize_field("encoding", &self.encoding)?;
         }
         struct_ser.end()
     }
@@ -690,8 +467,7 @@ impl<'de> serde::Deserialize<'de> for MsgTransfer {
             "timeout_timestamp",
             "timeoutTimestamp",
             "memo",
-            "tokens",
-            "forwarding",
+            "encoding",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -704,8 +480,7 @@ impl<'de> serde::Deserialize<'de> for MsgTransfer {
             TimeoutHeight,
             TimeoutTimestamp,
             Memo,
-            Tokens,
-            Forwarding,
+            Encoding,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> core::result::Result<GeneratedField, D::Error>
@@ -735,8 +510,7 @@ impl<'de> serde::Deserialize<'de> for MsgTransfer {
                             "timeoutHeight" | "timeout_height" => Ok(GeneratedField::TimeoutHeight),
                             "timeoutTimestamp" | "timeout_timestamp" => Ok(GeneratedField::TimeoutTimestamp),
                             "memo" => Ok(GeneratedField::Memo),
-                            "tokens" => Ok(GeneratedField::Tokens),
-                            "forwarding" => Ok(GeneratedField::Forwarding),
+                            "encoding" => Ok(GeneratedField::Encoding),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -764,8 +538,7 @@ impl<'de> serde::Deserialize<'de> for MsgTransfer {
                 let mut timeout_height__ = None;
                 let mut timeout_timestamp__ = None;
                 let mut memo__ = None;
-                let mut tokens__ = None;
-                let mut forwarding__ = None;
+                let mut encoding__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::SourcePort => {
@@ -818,17 +591,11 @@ impl<'de> serde::Deserialize<'de> for MsgTransfer {
                             }
                             memo__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::Tokens => {
-                            if tokens__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("tokens"));
+                        GeneratedField::Encoding => {
+                            if encoding__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("encoding"));
                             }
-                            tokens__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Forwarding => {
-                            if forwarding__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("forwarding"));
-                            }
-                            forwarding__ = map_.next_value()?;
+                            encoding__ = Some(map_.next_value()?);
                         }
                     }
                 }
@@ -841,8 +608,7 @@ impl<'de> serde::Deserialize<'de> for MsgTransfer {
                     timeout_height: timeout_height__,
                     timeout_timestamp: timeout_timestamp__.unwrap_or_default(),
                     memo: memo__.unwrap_or_default(),
-                    tokens: tokens__.unwrap_or_default(),
-                    forwarding: forwarding__,
+                    encoding: encoding__.unwrap_or_default(),
                 })
             }
         }

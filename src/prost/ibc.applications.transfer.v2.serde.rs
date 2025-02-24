@@ -106,224 +106,6 @@ impl<'de> serde::Deserialize<'de> for Denom {
         deserializer.deserialize_struct("ibc.applications.transfer.v2.Denom", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ForwardedPacket {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> core::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if true {
-            len += 1;
-        }
-        if true {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("ibc.applications.transfer.v2.ForwardedPacket", len)?;
-        if let Some(v) = self.forward_key.as_ref() {
-            struct_ser.serialize_field("forwardKey", v)?;
-        }
-        if let Some(v) = self.packet.as_ref() {
-            struct_ser.serialize_field("packet", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for ForwardedPacket {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "forward_key",
-            "forwardKey",
-            "packet",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            ForwardKey,
-            Packet,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> core::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> core::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "forwardKey" | "forward_key" => Ok(GeneratedField::ForwardKey),
-                            "packet" => Ok(GeneratedField::Packet),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ForwardedPacket;
-
-            fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                formatter.write_str("struct ibc.applications.transfer.v2.ForwardedPacket")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> core::result::Result<ForwardedPacket, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut forward_key__ = None;
-                let mut packet__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::ForwardKey => {
-                            if forward_key__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("forwardKey"));
-                            }
-                            forward_key__ = map_.next_value()?;
-                        }
-                        GeneratedField::Packet => {
-                            if packet__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("packet"));
-                            }
-                            packet__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(ForwardedPacket {
-                    forward_key: forward_key__,
-                    packet: packet__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("ibc.applications.transfer.v2.ForwardedPacket", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for ForwardingPacketData {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> core::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if true {
-            len += 1;
-        }
-        if true {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("ibc.applications.transfer.v2.ForwardingPacketData", len)?;
-        if true {
-            struct_ser.serialize_field("destinationMemo", &self.destination_memo)?;
-        }
-        if true {
-            struct_ser.serialize_field("hops", &self.hops)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for ForwardingPacketData {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "destination_memo",
-            "destinationMemo",
-            "hops",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            DestinationMemo,
-            Hops,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> core::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> core::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "destinationMemo" | "destination_memo" => Ok(GeneratedField::DestinationMemo),
-                            "hops" => Ok(GeneratedField::Hops),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ForwardingPacketData;
-
-            fn expecting(&self, formatter: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-                formatter.write_str("struct ibc.applications.transfer.v2.ForwardingPacketData")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> core::result::Result<ForwardingPacketData, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut destination_memo__ = None;
-                let mut hops__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::DestinationMemo => {
-                            if destination_memo__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("destinationMemo"));
-                            }
-                            destination_memo__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Hops => {
-                            if hops__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("hops"));
-                            }
-                            hops__ = Some(map_.next_value()?);
-                        }
-                    }
-                }
-                Ok(ForwardingPacketData {
-                    destination_memo: destination_memo__.unwrap_or_default(),
-                    hops: hops__.unwrap_or_default(),
-                })
-            }
-        }
-        deserializer.deserialize_struct("ibc.applications.transfer.v2.ForwardingPacketData", FIELDS, GeneratedVisitor)
-    }
-}
 impl serde::Serialize for FungibleTokenPacketData {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> core::result::Result<S::Ok, S::Error>
@@ -503,12 +285,9 @@ impl serde::Serialize for FungibleTokenPacketDataV2 {
         if true {
             len += 1;
         }
-        if true {
-            len += 1;
-        }
         let mut struct_ser = serializer.serialize_struct("ibc.applications.transfer.v2.FungibleTokenPacketDataV2", len)?;
-        if true {
-            struct_ser.serialize_field("tokens", &self.tokens)?;
+        if let Some(v) = self.token.as_ref() {
+            struct_ser.serialize_field("token", v)?;
         }
         if true {
             struct_ser.serialize_field("sender", &self.sender)?;
@@ -518,9 +297,6 @@ impl serde::Serialize for FungibleTokenPacketDataV2 {
         }
         if true {
             struct_ser.serialize_field("memo", &self.memo)?;
-        }
-        if let Some(v) = self.forwarding.as_ref() {
-            struct_ser.serialize_field("forwarding", v)?;
         }
         struct_ser.end()
     }
@@ -532,20 +308,18 @@ impl<'de> serde::Deserialize<'de> for FungibleTokenPacketDataV2 {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "tokens",
+            "token",
             "sender",
             "receiver",
             "memo",
-            "forwarding",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Tokens,
+            Token,
             Sender,
             Receiver,
             Memo,
-            Forwarding,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> core::result::Result<GeneratedField, D::Error>
@@ -567,11 +341,10 @@ impl<'de> serde::Deserialize<'de> for FungibleTokenPacketDataV2 {
                         E: serde::de::Error,
                     {
                         match value {
-                            "tokens" => Ok(GeneratedField::Tokens),
+                            "token" => Ok(GeneratedField::Token),
                             "sender" => Ok(GeneratedField::Sender),
                             "receiver" => Ok(GeneratedField::Receiver),
                             "memo" => Ok(GeneratedField::Memo),
-                            "forwarding" => Ok(GeneratedField::Forwarding),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -591,18 +364,17 @@ impl<'de> serde::Deserialize<'de> for FungibleTokenPacketDataV2 {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut tokens__ = None;
+                let mut token__ = None;
                 let mut sender__ = None;
                 let mut receiver__ = None;
                 let mut memo__ = None;
-                let mut forwarding__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Tokens => {
-                            if tokens__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("tokens"));
+                        GeneratedField::Token => {
+                            if token__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("token"));
                             }
-                            tokens__ = Some(map_.next_value()?);
+                            token__ = map_.next_value()?;
                         }
                         GeneratedField::Sender => {
                             if sender__.is_some() {
@@ -622,20 +394,13 @@ impl<'de> serde::Deserialize<'de> for FungibleTokenPacketDataV2 {
                             }
                             memo__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::Forwarding => {
-                            if forwarding__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("forwarding"));
-                            }
-                            forwarding__ = map_.next_value()?;
-                        }
                     }
                 }
                 Ok(FungibleTokenPacketDataV2 {
-                    tokens: tokens__.unwrap_or_default(),
+                    token: token__,
                     sender: sender__.unwrap_or_default(),
                     receiver: receiver__.unwrap_or_default(),
                     memo: memo__.unwrap_or_default(),
-                    forwarding: forwarding__,
                 })
             }
         }
@@ -662,9 +427,6 @@ impl serde::Serialize for GenesisState {
         if true {
             len += 1;
         }
-        if true {
-            len += 1;
-        }
         let mut struct_ser = serializer.serialize_struct("ibc.applications.transfer.v2.GenesisState", len)?;
         if true {
             struct_ser.serialize_field("portId", &self.port_id)?;
@@ -677,9 +439,6 @@ impl serde::Serialize for GenesisState {
         }
         if true {
             struct_ser.serialize_field("totalEscrowed", &self.total_escrowed)?;
-        }
-        if true {
-            struct_ser.serialize_field("forwardedPackets", &self.forwarded_packets)?;
         }
         struct_ser.end()
     }
@@ -697,8 +456,6 @@ impl<'de> serde::Deserialize<'de> for GenesisState {
             "params",
             "total_escrowed",
             "totalEscrowed",
-            "forwarded_packets",
-            "forwardedPackets",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -707,7 +464,6 @@ impl<'de> serde::Deserialize<'de> for GenesisState {
             Denoms,
             Params,
             TotalEscrowed,
-            ForwardedPackets,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> core::result::Result<GeneratedField, D::Error>
@@ -733,7 +489,6 @@ impl<'de> serde::Deserialize<'de> for GenesisState {
                             "denoms" => Ok(GeneratedField::Denoms),
                             "params" => Ok(GeneratedField::Params),
                             "totalEscrowed" | "total_escrowed" => Ok(GeneratedField::TotalEscrowed),
-                            "forwardedPackets" | "forwarded_packets" => Ok(GeneratedField::ForwardedPackets),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -757,7 +512,6 @@ impl<'de> serde::Deserialize<'de> for GenesisState {
                 let mut denoms__ = None;
                 let mut params__ = None;
                 let mut total_escrowed__ = None;
-                let mut forwarded_packets__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::PortId => {
@@ -784,12 +538,6 @@ impl<'de> serde::Deserialize<'de> for GenesisState {
                             }
                             total_escrowed__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::ForwardedPackets => {
-                            if forwarded_packets__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("forwardedPackets"));
-                            }
-                            forwarded_packets__ = Some(map_.next_value()?);
-                        }
                     }
                 }
                 Ok(GenesisState {
@@ -797,7 +545,6 @@ impl<'de> serde::Deserialize<'de> for GenesisState {
                     denoms: denoms__.unwrap_or_default(),
                     params: params__,
                     total_escrowed: total_escrowed__.unwrap_or_default(),
-                    forwarded_packets: forwarded_packets__.unwrap_or_default(),
                 })
             }
         }
