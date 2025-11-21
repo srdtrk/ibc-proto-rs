@@ -480,6 +480,39 @@ impl ::prost::Name for MsgUpdateParamsResponse {
         "/ibc.core.client.v1.MsgUpdateParamsResponse".into()
     }
 }
+/// MsgDeleteClientCreator defines a message to delete the client creator of a client
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MsgDeleteClientCreator {
+    /// client identifier
+    #[prost(string, tag = "1")]
+    pub client_id: ::prost::alloc::string::String,
+    /// signer address
+    #[prost(string, tag = "2")]
+    pub signer: ::prost::alloc::string::String,
+}
+impl ::prost::Name for MsgDeleteClientCreator {
+    const NAME: &'static str = "MsgDeleteClientCreator";
+    const PACKAGE: &'static str = "ibc.core.client.v1";
+    fn full_name() -> ::prost::alloc::string::String {
+        "ibc.core.client.v1.MsgDeleteClientCreator".into()
+    }
+    fn type_url() -> ::prost::alloc::string::String {
+        "/ibc.core.client.v1.MsgDeleteClientCreator".into()
+    }
+}
+/// MsgDeleteClientCreatorResponse defines the Msg/DeleteClientCreator response type.
+#[derive(Clone, Copy, PartialEq, ::prost::Message)]
+pub struct MsgDeleteClientCreatorResponse {}
+impl ::prost::Name for MsgDeleteClientCreatorResponse {
+    const NAME: &'static str = "MsgDeleteClientCreatorResponse";
+    const PACKAGE: &'static str = "ibc.core.client.v1";
+    fn full_name() -> ::prost::alloc::string::String {
+        "ibc.core.client.v1.MsgDeleteClientCreatorResponse".into()
+    }
+    fn type_url() -> ::prost::alloc::string::String {
+        "/ibc.core.client.v1.MsgDeleteClientCreatorResponse".into()
+    }
+}
 /// Generated client implementations.
 #[cfg(feature = "client")]
 pub mod msg_client {
@@ -511,7 +544,7 @@ pub mod msg_client {
     }
     impl<T> MsgClient<T>
     where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T: tonic::client::GrpcService<tonic::body::Body>,
         T::Error: Into<StdError>,
         T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
         <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
@@ -532,13 +565,13 @@ pub mod msg_client {
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
             T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
+                http::Request<tonic::body::Body>,
                 Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
                 >,
             >,
             <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
+                http::Request<tonic::body::Body>,
             >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
         {
             MsgClient::new(InterceptedService::new(inner, interceptor))
@@ -749,6 +782,33 @@ pub mod msg_client {
                 .insert(GrpcMethod::new("ibc.core.client.v1.Msg", "UpdateClientParams"));
             self.inner.unary(req, path, codec).await
         }
+        /// DeleteClientCreator defines a rpc handler method for MsgDeleteClientCreator.
+        pub async fn delete_client_creator(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MsgDeleteClientCreator>,
+        ) -> std::result::Result<
+            tonic::Response<super::MsgDeleteClientCreatorResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/ibc.core.client.v1.Msg/DeleteClientCreator",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("ibc.core.client.v1.Msg", "DeleteClientCreator"),
+                );
+            self.inner.unary(req, path, codec).await
+        }
     }
 }
 /// Generated server implementations.
@@ -821,6 +881,14 @@ pub mod msg_server {
             tonic::Response<super::MsgUpdateParamsResponse>,
             tonic::Status,
         >;
+        /// DeleteClientCreator defines a rpc handler method for MsgDeleteClientCreator.
+        async fn delete_client_creator(
+            &self,
+            request: tonic::Request<super::MsgDeleteClientCreator>,
+        ) -> std::result::Result<
+            tonic::Response<super::MsgDeleteClientCreatorResponse>,
+            tonic::Status,
+        >;
     }
     /// Msg defines the ibc/client Msg service.
     #[derive(Debug)]
@@ -888,7 +956,7 @@ pub mod msg_server {
         B: Body + std::marker::Send + 'static,
         B::Error: Into<StdError> + std::marker::Send + 'static,
     {
-        type Response = http::Response<tonic::body::BoxBody>;
+        type Response = http::Response<tonic::body::Body>;
         type Error = std::convert::Infallible;
         type Future = BoxFuture<Self::Response, Self::Error>;
         fn poll_ready(
@@ -1204,9 +1272,56 @@ pub mod msg_server {
                     };
                     Box::pin(fut)
                 }
+                "/ibc.core.client.v1.Msg/DeleteClientCreator" => {
+                    #[allow(non_camel_case_types)]
+                    struct DeleteClientCreatorSvc<T: Msg>(pub Arc<T>);
+                    impl<
+                        T: Msg,
+                    > tonic::server::UnaryService<super::MsgDeleteClientCreator>
+                    for DeleteClientCreatorSvc<T> {
+                        type Response = super::MsgDeleteClientCreatorResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::MsgDeleteClientCreator>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as Msg>::delete_client_creator(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = DeleteClientCreatorSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
                 _ => {
                     Box::pin(async move {
-                        let mut response = http::Response::new(empty_body());
+                        let mut response = http::Response::new(
+                            tonic::body::Body::default(),
+                        );
                         let headers = response.headers_mut();
                         headers
                             .insert(
@@ -1542,6 +1657,42 @@ impl ::prost::Name for QueryClientParamsResponse {
         "/ibc.core.client.v1.QueryClientParamsResponse".into()
     }
 }
+/// QueryClientCreatorRequest is the request type for the Query/ClientCreator RPC
+/// method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QueryClientCreatorRequest {
+    /// client unique identifier
+    #[prost(string, tag = "1")]
+    pub client_id: ::prost::alloc::string::String,
+}
+impl ::prost::Name for QueryClientCreatorRequest {
+    const NAME: &'static str = "QueryClientCreatorRequest";
+    const PACKAGE: &'static str = "ibc.core.client.v1";
+    fn full_name() -> ::prost::alloc::string::String {
+        "ibc.core.client.v1.QueryClientCreatorRequest".into()
+    }
+    fn type_url() -> ::prost::alloc::string::String {
+        "/ibc.core.client.v1.QueryClientCreatorRequest".into()
+    }
+}
+/// QueryClientCreatorResponse is the response type for the Query/ClientCreator RPC
+/// method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QueryClientCreatorResponse {
+    /// creator of the client
+    #[prost(string, tag = "1")]
+    pub creator: ::prost::alloc::string::String,
+}
+impl ::prost::Name for QueryClientCreatorResponse {
+    const NAME: &'static str = "QueryClientCreatorResponse";
+    const PACKAGE: &'static str = "ibc.core.client.v1";
+    fn full_name() -> ::prost::alloc::string::String {
+        "ibc.core.client.v1.QueryClientCreatorResponse".into()
+    }
+    fn type_url() -> ::prost::alloc::string::String {
+        "/ibc.core.client.v1.QueryClientCreatorResponse".into()
+    }
+}
 /// QueryUpgradedClientStateRequest is the request type for the
 /// Query/UpgradedClientState RPC method
 #[derive(Clone, Copy, PartialEq, ::prost::Message)]
@@ -1693,7 +1844,7 @@ pub mod query_client {
     }
     impl<T> QueryClient<T>
     where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T: tonic::client::GrpcService<tonic::body::Body>,
         T::Error: Into<StdError>,
         T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
         <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
@@ -1714,13 +1865,13 @@ pub mod query_client {
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
             T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
+                http::Request<tonic::body::Body>,
                 Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
                 >,
             >,
             <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
+                http::Request<tonic::body::Body>,
             >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
         {
             QueryClient::new(InterceptedService::new(inner, interceptor))
@@ -1935,6 +2086,31 @@ pub mod query_client {
                 .insert(GrpcMethod::new("ibc.core.client.v1.Query", "ClientParams"));
             self.inner.unary(req, path, codec).await
         }
+        /// ClientCreator queries the creator of a given client.
+        pub async fn client_creator(
+            &mut self,
+            request: impl tonic::IntoRequest<super::QueryClientCreatorRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::QueryClientCreatorResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/ibc.core.client.v1.Query/ClientCreator",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("ibc.core.client.v1.Query", "ClientCreator"));
+            self.inner.unary(req, path, codec).await
+        }
         /// UpgradedClientState queries an Upgraded IBC light client.
         pub async fn upgraded_client_state(
             &mut self,
@@ -2088,6 +2264,14 @@ pub mod query_server {
             tonic::Response<super::QueryClientParamsResponse>,
             tonic::Status,
         >;
+        /// ClientCreator queries the creator of a given client.
+        async fn client_creator(
+            &self,
+            request: tonic::Request<super::QueryClientCreatorRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::QueryClientCreatorResponse>,
+            tonic::Status,
+        >;
         /// UpgradedClientState queries an Upgraded IBC light client.
         async fn upgraded_client_state(
             &self,
@@ -2179,7 +2363,7 @@ pub mod query_server {
         B: Body + std::marker::Send + 'static,
         B::Error: Into<StdError> + std::marker::Send + 'static,
     {
-        type Response = http::Response<tonic::body::BoxBody>;
+        type Response = http::Response<tonic::body::Body>;
         type Error = std::convert::Infallible;
         type Future = BoxFuture<Self::Response, Self::Error>;
         fn poll_ready(
@@ -2508,6 +2692,51 @@ pub mod query_server {
                     };
                     Box::pin(fut)
                 }
+                "/ibc.core.client.v1.Query/ClientCreator" => {
+                    #[allow(non_camel_case_types)]
+                    struct ClientCreatorSvc<T: Query>(pub Arc<T>);
+                    impl<
+                        T: Query,
+                    > tonic::server::UnaryService<super::QueryClientCreatorRequest>
+                    for ClientCreatorSvc<T> {
+                        type Response = super::QueryClientCreatorResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::QueryClientCreatorRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as Query>::client_creator(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = ClientCreatorSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
                 "/ibc.core.client.v1.Query/UpgradedClientState" => {
                     #[allow(non_camel_case_types)]
                     struct UpgradedClientStateSvc<T: Query>(pub Arc<T>);
@@ -2651,7 +2880,9 @@ pub mod query_server {
                 }
                 _ => {
                     Box::pin(async move {
-                        let mut response = http::Response::new(empty_body());
+                        let mut response = http::Response::new(
+                            tonic::body::Body::default(),
+                        );
                         let headers = response.headers_mut();
                         headers
                             .insert(

@@ -24,25 +24,6 @@ impl ::prost::Name for Params {
         "/ibc.applications.transfer.v1.Params".into()
     }
 }
-/// Hop defines a port ID, channel ID pair specifying where tokens must be forwarded
-/// next in a multihop transfer.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Hop {
-    #[prost(string, tag = "1")]
-    pub port_id: ::prost::alloc::string::String,
-    #[prost(string, tag = "2")]
-    pub channel_id: ::prost::alloc::string::String,
-}
-impl ::prost::Name for Hop {
-    const NAME: &'static str = "Hop";
-    const PACKAGE: &'static str = "ibc.applications.transfer.v1";
-    fn full_name() -> ::prost::alloc::string::String {
-        "ibc.applications.transfer.v1.Hop".into()
-    }
-    fn type_url() -> ::prost::alloc::string::String {
-        "/ibc.applications.transfer.v1.Hop".into()
-    }
-}
 /// MsgTransfer defines a msg to transfer fungible tokens (i.e Coins) between
 /// ICS20 enabled chains. See ICS Spec here:
 /// <https://github.com/cosmos/ibc/tree/master/spec/app/ics-020-fungible-token-transfer#data-structures>
@@ -66,13 +47,15 @@ pub struct MsgTransfer {
     #[prost(string, tag = "5")]
     pub receiver: ::prost::alloc::string::String,
     /// Timeout height relative to the current block height.
-    /// The timeout is disabled when set to 0.
+    /// If you are sending with IBC v1 protocol, either timeout_height or timeout_timestamp must be set.
+    /// If you are sending with IBC v2 protocol, timeout_timestamp must be set, and timeout_height must be omitted.
     #[prost(message, optional, tag = "6")]
     pub timeout_height: ::core::option::Option<
         super::super::super::core::client::v1::Height,
     >,
     /// Timeout timestamp in absolute nanoseconds since unix epoch.
-    /// The timeout is disabled when set to 0.
+    /// If you are sending with IBC v1 protocol, either timeout_height or timeout_timestamp must be set.
+    /// If you are sending with IBC v2 protocol, timeout_timestamp must be set.
     #[prost(uint64, tag = "7")]
     pub timeout_timestamp: u64,
     /// optional memo
@@ -176,7 +159,7 @@ pub mod msg_client {
     }
     impl<T> MsgClient<T>
     where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T: tonic::client::GrpcService<tonic::body::Body>,
         T::Error: Into<StdError>,
         T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
         <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
@@ -197,13 +180,13 @@ pub mod msg_client {
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
             T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
+                http::Request<tonic::body::Body>,
                 Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
                 >,
             >,
             <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
+                http::Request<tonic::body::Body>,
             >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
         {
             MsgClient::new(InterceptedService::new(inner, interceptor))
@@ -390,7 +373,7 @@ pub mod msg_server {
         B: Body + std::marker::Send + 'static,
         B::Error: Into<StdError> + std::marker::Send + 'static,
     {
-        type Response = http::Response<tonic::body::BoxBody>;
+        type Response = http::Response<tonic::body::Body>;
         type Error = std::convert::Infallible;
         type Future = BoxFuture<Self::Response, Self::Error>;
         fn poll_ready(
@@ -489,7 +472,9 @@ pub mod msg_server {
                 }
                 _ => {
                     Box::pin(async move {
-                        let mut response = http::Response::new(empty_body());
+                        let mut response = http::Response::new(
+                            tonic::body::Body::default(),
+                        );
                         let headers = response.headers_mut();
                         headers
                             .insert(
@@ -547,6 +532,95 @@ impl ::prost::Name for DenomTrace {
         "/ibc.applications.transfer.v1.DenomTrace".into()
     }
 }
+/// Token defines a struct which represents a token to be transferred.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Token {
+    /// the token denomination
+    #[prost(message, optional, tag = "1")]
+    pub denom: ::core::option::Option<Denom>,
+    /// the token amount to be transferred
+    #[prost(string, tag = "2")]
+    pub amount: ::prost::alloc::string::String,
+}
+impl ::prost::Name for Token {
+    const NAME: &'static str = "Token";
+    const PACKAGE: &'static str = "ibc.applications.transfer.v1";
+    fn full_name() -> ::prost::alloc::string::String {
+        "ibc.applications.transfer.v1.Token".into()
+    }
+    fn type_url() -> ::prost::alloc::string::String {
+        "/ibc.applications.transfer.v1.Token".into()
+    }
+}
+/// Denom holds the base denom of a Token and a trace of the chains it was sent through.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Denom {
+    /// the base token denomination
+    #[prost(string, tag = "1")]
+    pub base: ::prost::alloc::string::String,
+    /// the trace of the token
+    #[prost(message, repeated, tag = "3")]
+    pub trace: ::prost::alloc::vec::Vec<Hop>,
+}
+impl ::prost::Name for Denom {
+    const NAME: &'static str = "Denom";
+    const PACKAGE: &'static str = "ibc.applications.transfer.v1";
+    fn full_name() -> ::prost::alloc::string::String {
+        "ibc.applications.transfer.v1.Denom".into()
+    }
+    fn type_url() -> ::prost::alloc::string::String {
+        "/ibc.applications.transfer.v1.Denom".into()
+    }
+}
+/// Hop defines a port ID, channel ID pair specifying a unique "hop" in a trace
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Hop {
+    #[prost(string, tag = "1")]
+    pub port_id: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub channel_id: ::prost::alloc::string::String,
+}
+impl ::prost::Name for Hop {
+    const NAME: &'static str = "Hop";
+    const PACKAGE: &'static str = "ibc.applications.transfer.v1";
+    fn full_name() -> ::prost::alloc::string::String {
+        "ibc.applications.transfer.v1.Hop".into()
+    }
+    fn type_url() -> ::prost::alloc::string::String {
+        "/ibc.applications.transfer.v1.Hop".into()
+    }
+}
+/// FungibleTokenPacketData defines a struct for the packet payload
+/// See FungibleTokenPacketData spec:
+/// <https://github.com/cosmos/ibc/tree/master/spec/app/ics-020-fungible-token-transfer#data-structures>
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FungibleTokenPacketData {
+    /// the token denomination to be transferred
+    #[prost(string, tag = "1")]
+    pub denom: ::prost::alloc::string::String,
+    /// the token amount to be transferred
+    #[prost(string, tag = "2")]
+    pub amount: ::prost::alloc::string::String,
+    /// the sender address
+    #[prost(string, tag = "3")]
+    pub sender: ::prost::alloc::string::String,
+    /// the recipient address on the destination chain
+    #[prost(string, tag = "4")]
+    pub receiver: ::prost::alloc::string::String,
+    /// optional memo
+    #[prost(string, tag = "5")]
+    pub memo: ::prost::alloc::string::String,
+}
+impl ::prost::Name for FungibleTokenPacketData {
+    const NAME: &'static str = "FungibleTokenPacketData";
+    const PACKAGE: &'static str = "ibc.applications.transfer.v1";
+    fn full_name() -> ::prost::alloc::string::String {
+        "ibc.applications.transfer.v1.FungibleTokenPacketData".into()
+    }
+    fn type_url() -> ::prost::alloc::string::String {
+        "/ibc.applications.transfer.v1.FungibleTokenPacketData".into()
+    }
+}
 /// QueryParamsRequest is the request type for the Query/Params RPC method.
 #[derive(Clone, Copy, PartialEq, ::prost::Message)]
 pub struct QueryParamsRequest {}
@@ -575,6 +649,85 @@ impl ::prost::Name for QueryParamsResponse {
     }
     fn type_url() -> ::prost::alloc::string::String {
         "/ibc.applications.transfer.v1.QueryParamsResponse".into()
+    }
+}
+/// QueryDenomRequest is the request type for the Query/Denom RPC
+/// method
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QueryDenomRequest {
+    /// hash (in hex format) or denom (full denom with ibc prefix) of the on chain denomination.
+    #[prost(string, tag = "1")]
+    pub hash: ::prost::alloc::string::String,
+}
+impl ::prost::Name for QueryDenomRequest {
+    const NAME: &'static str = "QueryDenomRequest";
+    const PACKAGE: &'static str = "ibc.applications.transfer.v1";
+    fn full_name() -> ::prost::alloc::string::String {
+        "ibc.applications.transfer.v1.QueryDenomRequest".into()
+    }
+    fn type_url() -> ::prost::alloc::string::String {
+        "/ibc.applications.transfer.v1.QueryDenomRequest".into()
+    }
+}
+/// QueryDenomResponse is the response type for the Query/Denom RPC
+/// method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QueryDenomResponse {
+    /// denom returns the requested denomination.
+    #[prost(message, optional, tag = "1")]
+    pub denom: ::core::option::Option<Denom>,
+}
+impl ::prost::Name for QueryDenomResponse {
+    const NAME: &'static str = "QueryDenomResponse";
+    const PACKAGE: &'static str = "ibc.applications.transfer.v1";
+    fn full_name() -> ::prost::alloc::string::String {
+        "ibc.applications.transfer.v1.QueryDenomResponse".into()
+    }
+    fn type_url() -> ::prost::alloc::string::String {
+        "/ibc.applications.transfer.v1.QueryDenomResponse".into()
+    }
+}
+/// QueryDenomsRequest is the request type for the Query/Denoms RPC
+/// method
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QueryDenomsRequest {
+    /// pagination defines an optional pagination for the request.
+    #[prost(message, optional, tag = "1")]
+    pub pagination: ::core::option::Option<
+        super::super::super::super::cosmos::base::query::v1beta1::PageRequest,
+    >,
+}
+impl ::prost::Name for QueryDenomsRequest {
+    const NAME: &'static str = "QueryDenomsRequest";
+    const PACKAGE: &'static str = "ibc.applications.transfer.v1";
+    fn full_name() -> ::prost::alloc::string::String {
+        "ibc.applications.transfer.v1.QueryDenomsRequest".into()
+    }
+    fn type_url() -> ::prost::alloc::string::String {
+        "/ibc.applications.transfer.v1.QueryDenomsRequest".into()
+    }
+}
+/// QueryDenomsResponse is the response type for the Query/Denoms RPC
+/// method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QueryDenomsResponse {
+    /// denoms returns all denominations.
+    #[prost(message, repeated, tag = "1")]
+    pub denoms: ::prost::alloc::vec::Vec<Denom>,
+    /// pagination defines the pagination in the response.
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<
+        super::super::super::super::cosmos::base::query::v1beta1::PageResponse,
+    >,
+}
+impl ::prost::Name for QueryDenomsResponse {
+    const NAME: &'static str = "QueryDenomsResponse";
+    const PACKAGE: &'static str = "ibc.applications.transfer.v1";
+    fn full_name() -> ::prost::alloc::string::String {
+        "ibc.applications.transfer.v1.QueryDenomsResponse".into()
+    }
+    fn type_url() -> ::prost::alloc::string::String {
+        "/ibc.applications.transfer.v1.QueryDenomsResponse".into()
     }
 }
 /// QueryDenomHashRequest is the request type for the Query/DenomHash RPC
@@ -715,7 +868,7 @@ pub mod query_client {
     }
     impl<T> QueryClient<T>
     where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T: tonic::client::GrpcService<tonic::body::Body>,
         T::Error: Into<StdError>,
         T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
         <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
@@ -736,13 +889,13 @@ pub mod query_client {
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
             T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
+                http::Request<tonic::body::Body>,
                 Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
                 >,
             >,
             <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
+                http::Request<tonic::body::Body>,
             >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
         {
             QueryClient::new(InterceptedService::new(inner, interceptor))
@@ -801,6 +954,56 @@ pub mod query_client {
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("ibc.applications.transfer.v1.Query", "Params"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// Denoms queries all denominations
+        pub async fn denoms(
+            &mut self,
+            request: impl tonic::IntoRequest<super::QueryDenomsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::QueryDenomsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/ibc.applications.transfer.v1.Query/Denoms",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("ibc.applications.transfer.v1.Query", "Denoms"));
+            self.inner.unary(req, path, codec).await
+        }
+        /// Denom queries a denomination
+        pub async fn denom(
+            &mut self,
+            request: impl tonic::IntoRequest<super::QueryDenomRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::QueryDenomResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/ibc.applications.transfer.v1.Query/Denom",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("ibc.applications.transfer.v1.Query", "Denom"));
             self.inner.unary(req, path, codec).await
         }
         /// DenomHash queries a denomination hash information.
@@ -914,6 +1117,22 @@ pub mod query_server {
             tonic::Response<super::QueryParamsResponse>,
             tonic::Status,
         >;
+        /// Denoms queries all denominations
+        async fn denoms(
+            &self,
+            request: tonic::Request<super::QueryDenomsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::QueryDenomsResponse>,
+            tonic::Status,
+        >;
+        /// Denom queries a denomination
+        async fn denom(
+            &self,
+            request: tonic::Request<super::QueryDenomRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::QueryDenomResponse>,
+            tonic::Status,
+        >;
         /// DenomHash queries a denomination hash information.
         async fn denom_hash(
             &self,
@@ -1005,7 +1224,7 @@ pub mod query_server {
         B: Body + std::marker::Send + 'static,
         B::Error: Into<StdError> + std::marker::Send + 'static,
     {
-        type Response = http::Response<tonic::body::BoxBody>;
+        type Response = http::Response<tonic::body::Body>;
         type Error = std::convert::Infallible;
         type Future = BoxFuture<Self::Response, Self::Error>;
         fn poll_ready(
@@ -1044,6 +1263,92 @@ pub mod query_server {
                     let inner = self.inner.clone();
                     let fut = async move {
                         let method = ParamsSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/ibc.applications.transfer.v1.Query/Denoms" => {
+                    #[allow(non_camel_case_types)]
+                    struct DenomsSvc<T: Query>(pub Arc<T>);
+                    impl<T: Query> tonic::server::UnaryService<super::QueryDenomsRequest>
+                    for DenomsSvc<T> {
+                        type Response = super::QueryDenomsResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::QueryDenomsRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as Query>::denoms(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = DenomsSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/ibc.applications.transfer.v1.Query/Denom" => {
+                    #[allow(non_camel_case_types)]
+                    struct DenomSvc<T: Query>(pub Arc<T>);
+                    impl<T: Query> tonic::server::UnaryService<super::QueryDenomRequest>
+                    for DenomSvc<T> {
+                        type Response = super::QueryDenomResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::QueryDenomRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as Query>::denom(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = DenomSvc(inner);
                         let codec = tonic::codec::ProstCodec::default();
                         let mut grpc = tonic::server::Grpc::new(codec)
                             .apply_compression_config(
@@ -1198,7 +1503,9 @@ pub mod query_server {
                 }
                 _ => {
                     Box::pin(async move {
-                        let mut response = http::Response::new(empty_body());
+                        let mut response = http::Response::new(
+                            tonic::body::Body::default(),
+                        );
                         let headers = response.headers_mut();
                         headers
                             .insert(
@@ -1282,5 +1589,31 @@ impl ::prost::Name for TransferAuthorization {
     }
     fn type_url() -> ::prost::alloc::string::String {
         "/ibc.applications.transfer.v1.TransferAuthorization".into()
+    }
+}
+/// GenesisState defines the ibc-transfer genesis state
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenesisState {
+    #[prost(string, tag = "1")]
+    pub port_id: ::prost::alloc::string::String,
+    #[prost(message, repeated, tag = "2")]
+    pub denoms: ::prost::alloc::vec::Vec<Denom>,
+    #[prost(message, optional, tag = "3")]
+    pub params: ::core::option::Option<Params>,
+    /// total_escrowed contains the total amount of tokens escrowed
+    /// by the transfer module
+    #[prost(message, repeated, tag = "4")]
+    pub total_escrowed: ::prost::alloc::vec::Vec<
+        super::super::super::super::cosmos::base::v1beta1::Coin,
+    >,
+}
+impl ::prost::Name for GenesisState {
+    const NAME: &'static str = "GenesisState";
+    const PACKAGE: &'static str = "ibc.applications.transfer.v1";
+    fn full_name() -> ::prost::alloc::string::String {
+        "ibc.applications.transfer.v1.GenesisState".into()
+    }
+    fn type_url() -> ::prost::alloc::string::String {
+        "/ibc.applications.transfer.v1.GenesisState".into()
     }
 }

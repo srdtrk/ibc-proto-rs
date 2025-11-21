@@ -56,6 +56,26 @@ impl ::prost::Name for GenesisState {
         "/ibc.core.client.v2.GenesisState".into()
     }
 }
+/// Config is a **per-client** configuration struct that sets which relayers are allowed to relay v2 IBC messages
+/// for a given client.
+/// If it is set, then only relayers in the allow list can send v2 messages
+/// If it is not set, then the client allows permissionless relaying of v2 messages
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Config {
+    /// allowed_relayers defines the set of allowed relayers for IBC V2 protocol for the given client
+    #[prost(string, repeated, tag = "1")]
+    pub allowed_relayers: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+impl ::prost::Name for Config {
+    const NAME: &'static str = "Config";
+    const PACKAGE: &'static str = "ibc.core.client.v2";
+    fn full_name() -> ::prost::alloc::string::String {
+        "ibc.core.client.v2.Config".into()
+    }
+    fn type_url() -> ::prost::alloc::string::String {
+        "/ibc.core.client.v2.Config".into()
+    }
+}
 /// MsgRegisterCounterparty defines a message to register a counterparty on a client
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MsgRegisterCounterparty {
@@ -97,6 +117,44 @@ impl ::prost::Name for MsgRegisterCounterpartyResponse {
         "/ibc.core.client.v2.MsgRegisterCounterpartyResponse".into()
     }
 }
+/// MsgUpdateClientConfig defines the sdk.Msg type to update the configuration for a given client
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MsgUpdateClientConfig {
+    /// client identifier
+    #[prost(string, tag = "1")]
+    pub client_id: ::prost::alloc::string::String,
+    /// allowed relayers
+    ///
+    /// NOTE: All fields in the config must be supplied.
+    #[prost(message, optional, tag = "2")]
+    pub config: ::core::option::Option<Config>,
+    /// signer address
+    #[prost(string, tag = "3")]
+    pub signer: ::prost::alloc::string::String,
+}
+impl ::prost::Name for MsgUpdateClientConfig {
+    const NAME: &'static str = "MsgUpdateClientConfig";
+    const PACKAGE: &'static str = "ibc.core.client.v2";
+    fn full_name() -> ::prost::alloc::string::String {
+        "ibc.core.client.v2.MsgUpdateClientConfig".into()
+    }
+    fn type_url() -> ::prost::alloc::string::String {
+        "/ibc.core.client.v2.MsgUpdateClientConfig".into()
+    }
+}
+/// MsgUpdateClientConfigResponse defines the MsgUpdateClientConfig response type.
+#[derive(Clone, Copy, PartialEq, ::prost::Message)]
+pub struct MsgUpdateClientConfigResponse {}
+impl ::prost::Name for MsgUpdateClientConfigResponse {
+    const NAME: &'static str = "MsgUpdateClientConfigResponse";
+    const PACKAGE: &'static str = "ibc.core.client.v2";
+    fn full_name() -> ::prost::alloc::string::String {
+        "ibc.core.client.v2.MsgUpdateClientConfigResponse".into()
+    }
+    fn type_url() -> ::prost::alloc::string::String {
+        "/ibc.core.client.v2.MsgUpdateClientConfigResponse".into()
+    }
+}
 /// Generated client implementations.
 #[cfg(feature = "client")]
 pub mod msg_client {
@@ -128,7 +186,7 @@ pub mod msg_client {
     }
     impl<T> MsgClient<T>
     where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T: tonic::client::GrpcService<tonic::body::Body>,
         T::Error: Into<StdError>,
         T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
         <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
@@ -149,13 +207,13 @@ pub mod msg_client {
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
             T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
+                http::Request<tonic::body::Body>,
                 Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
                 >,
             >,
             <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
+                http::Request<tonic::body::Body>,
             >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
         {
             MsgClient::new(InterceptedService::new(inner, interceptor))
@@ -218,6 +276,31 @@ pub mod msg_client {
                 );
             self.inner.unary(req, path, codec).await
         }
+        /// UpdateClientConfig defines a rpc handler method for MsgUpdateClientConfig.
+        pub async fn update_client_config(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MsgUpdateClientConfig>,
+        ) -> std::result::Result<
+            tonic::Response<super::MsgUpdateClientConfigResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/ibc.core.client.v2.Msg/UpdateClientConfig",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("ibc.core.client.v2.Msg", "UpdateClientConfig"));
+            self.inner.unary(req, path, codec).await
+        }
     }
 }
 /// Generated server implementations.
@@ -240,6 +323,14 @@ pub mod msg_server {
             request: tonic::Request<super::MsgRegisterCounterparty>,
         ) -> std::result::Result<
             tonic::Response<super::MsgRegisterCounterpartyResponse>,
+            tonic::Status,
+        >;
+        /// UpdateClientConfig defines a rpc handler method for MsgUpdateClientConfig.
+        async fn update_client_config(
+            &self,
+            request: tonic::Request<super::MsgUpdateClientConfig>,
+        ) -> std::result::Result<
+            tonic::Response<super::MsgUpdateClientConfigResponse>,
             tonic::Status,
         >;
     }
@@ -309,7 +400,7 @@ pub mod msg_server {
         B: Body + std::marker::Send + 'static,
         B::Error: Into<StdError> + std::marker::Send + 'static,
     {
-        type Response = http::Response<tonic::body::BoxBody>;
+        type Response = http::Response<tonic::body::Body>;
         type Error = std::convert::Infallible;
         type Future = BoxFuture<Self::Response, Self::Error>;
         fn poll_ready(
@@ -365,9 +456,56 @@ pub mod msg_server {
                     };
                     Box::pin(fut)
                 }
+                "/ibc.core.client.v2.Msg/UpdateClientConfig" => {
+                    #[allow(non_camel_case_types)]
+                    struct UpdateClientConfigSvc<T: Msg>(pub Arc<T>);
+                    impl<
+                        T: Msg,
+                    > tonic::server::UnaryService<super::MsgUpdateClientConfig>
+                    for UpdateClientConfigSvc<T> {
+                        type Response = super::MsgUpdateClientConfigResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::MsgUpdateClientConfig>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as Msg>::update_client_config(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = UpdateClientConfigSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
                 _ => {
                     Box::pin(async move {
-                        let mut response = http::Response::new(empty_body());
+                        let mut response = http::Response::new(
+                            tonic::body::Body::default(),
+                        );
                         let headers = response.headers_mut();
                         headers
                             .insert(
@@ -438,6 +576,39 @@ impl ::prost::Name for QueryCounterpartyInfoResponse {
         "/ibc.core.client.v2.QueryCounterpartyInfoResponse".into()
     }
 }
+/// QueryConfigRequest is the request type for the Query/Config RPC method
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QueryConfigRequest {
+    /// client state unique identifier
+    #[prost(string, tag = "1")]
+    pub client_id: ::prost::alloc::string::String,
+}
+impl ::prost::Name for QueryConfigRequest {
+    const NAME: &'static str = "QueryConfigRequest";
+    const PACKAGE: &'static str = "ibc.core.client.v2";
+    fn full_name() -> ::prost::alloc::string::String {
+        "ibc.core.client.v2.QueryConfigRequest".into()
+    }
+    fn type_url() -> ::prost::alloc::string::String {
+        "/ibc.core.client.v2.QueryConfigRequest".into()
+    }
+}
+/// QueryConfigResponse is the response type for the Query/Config RPC method
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QueryConfigResponse {
+    #[prost(message, optional, tag = "1")]
+    pub config: ::core::option::Option<Config>,
+}
+impl ::prost::Name for QueryConfigResponse {
+    const NAME: &'static str = "QueryConfigResponse";
+    const PACKAGE: &'static str = "ibc.core.client.v2";
+    fn full_name() -> ::prost::alloc::string::String {
+        "ibc.core.client.v2.QueryConfigResponse".into()
+    }
+    fn type_url() -> ::prost::alloc::string::String {
+        "/ibc.core.client.v2.QueryConfigResponse".into()
+    }
+}
 /// Generated client implementations.
 #[cfg(feature = "client")]
 pub mod query_client {
@@ -469,7 +640,7 @@ pub mod query_client {
     }
     impl<T> QueryClient<T>
     where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T: tonic::client::GrpcService<tonic::body::Body>,
         T::Error: Into<StdError>,
         T::ResponseBody: Body<Data = Bytes> + std::marker::Send + 'static,
         <T::ResponseBody as Body>::Error: Into<StdError> + std::marker::Send,
@@ -490,13 +661,13 @@ pub mod query_client {
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
             T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
+                http::Request<tonic::body::Body>,
                 Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                    <T as tonic::client::GrpcService<tonic::body::Body>>::ResponseBody,
                 >,
             >,
             <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
+                http::Request<tonic::body::Body>,
             >>::Error: Into<StdError> + std::marker::Send + std::marker::Sync,
         {
             QueryClient::new(InterceptedService::new(inner, interceptor))
@@ -557,6 +728,31 @@ pub mod query_client {
                 .insert(GrpcMethod::new("ibc.core.client.v2.Query", "CounterpartyInfo"));
             self.inner.unary(req, path, codec).await
         }
+        /// Config queries the IBC client v2 configuration for a given client.
+        pub async fn config(
+            &mut self,
+            request: impl tonic::IntoRequest<super::QueryConfigRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::QueryConfigResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/ibc.core.client.v2.Query/Config",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("ibc.core.client.v2.Query", "Config"));
+            self.inner.unary(req, path, codec).await
+        }
     }
 }
 /// Generated server implementations.
@@ -579,6 +775,14 @@ pub mod query_server {
             request: tonic::Request<super::QueryCounterpartyInfoRequest>,
         ) -> std::result::Result<
             tonic::Response<super::QueryCounterpartyInfoResponse>,
+            tonic::Status,
+        >;
+        /// Config queries the IBC client v2 configuration for a given client.
+        async fn config(
+            &self,
+            request: tonic::Request<super::QueryConfigRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::QueryConfigResponse>,
             tonic::Status,
         >;
     }
@@ -648,7 +852,7 @@ pub mod query_server {
         B: Body + std::marker::Send + 'static,
         B::Error: Into<StdError> + std::marker::Send + 'static,
     {
-        type Response = http::Response<tonic::body::BoxBody>;
+        type Response = http::Response<tonic::body::Body>;
         type Error = std::convert::Infallible;
         type Future = BoxFuture<Self::Response, Self::Error>;
         fn poll_ready(
@@ -704,9 +908,54 @@ pub mod query_server {
                     };
                     Box::pin(fut)
                 }
+                "/ibc.core.client.v2.Query/Config" => {
+                    #[allow(non_camel_case_types)]
+                    struct ConfigSvc<T: Query>(pub Arc<T>);
+                    impl<T: Query> tonic::server::UnaryService<super::QueryConfigRequest>
+                    for ConfigSvc<T> {
+                        type Response = super::QueryConfigResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::QueryConfigRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as Query>::config(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = ConfigSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
                 _ => {
                     Box::pin(async move {
-                        let mut response = http::Response::new(empty_body());
+                        let mut response = http::Response::new(
+                            tonic::body::Body::default(),
+                        );
                         let headers = response.headers_mut();
                         headers
                             .insert(
